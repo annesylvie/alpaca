@@ -2,6 +2,7 @@
 
 
 src/tailwind.output.css
+package-lock.json
 
 # dependencies
 /node_modules
