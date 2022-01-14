@@ -49,6 +49,10 @@ export function getPace(
   };
 }
 
+function displayNumber(numberToDisplay: number): string {
+  return numberToDisplay.toFixed(2);
+}
+
 export const Segment: React.FC<ISegment> = ({
   distance,
   duration,
@@ -58,9 +62,9 @@ export const Segment: React.FC<ISegment> = ({
   console.log(speedToPace(speed));
   return (
     <div className="text-white bg-gradient-to-r from-green-400 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm my-2 p-4">
-      <div>Distance: {distance / 1000}</div>
-      <div>Duration: {duration / 60}</div>
-      <div>Pace: {speedToPace(speed)}</div>
+      <div>Distance: {displayNumber(distance / 1000)}km</div>
+      <div>Duration: {displayNumber(duration / 60)}min</div>
+      <div>Pace: {displayNumber(speedToPace(speed))}min/km</div>
     </div>
   );
 };
