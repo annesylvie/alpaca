@@ -1,11 +1,10 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { Segment, ISegment } from "./Box";
 import { Form } from "./Form";
 
 function App() {
   const [segments, setSegments] = useState<Array<ISegment>>([]);
-  const [showFields, setShowFields] = useState(false);
   console.log(segments);
 
   return (
@@ -18,12 +17,7 @@ function App() {
             speed={segment.speed}
           />
         ))}
-        <Form
-          showFields={showFields}
-          setShowFields={setShowFields}
-          segments={segments}
-          setSegments={setSegments}
-        />
+        <Form segments={segments} setSegments={setSegments} />
       </div>
     </div>
   );

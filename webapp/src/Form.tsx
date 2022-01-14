@@ -40,8 +40,6 @@ enum ConversionKind {
 }
 
 interface IFormProps {
-  showFields: boolean;
-  setShowFields: Dispatch<SetStateAction<boolean>>;
   segments: Array<ISegment>;
   setSegments: Dispatch<SetStateAction<Array<ISegment>>>;
 }
@@ -154,9 +152,7 @@ export function ConversionInputFormInput(props: {
       </label>
       <input
         className="shadow appearance-none border rounded w-full my-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        // FIXME
-        id="alpaca-distance"
-        placeholder="Distance in km"
+        id={`alpaca-${props.inputName}`}
         name={props.inputName}
         onChange={props.onChange}
         required

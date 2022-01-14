@@ -6,18 +6,14 @@ export interface ISegment {
   speed: number; // In meters per second
 }
 
-function paceToSpeed(pace: number): number {
-  /// Converts pace in minutes per kilometers into speed in meters per second
-  return 1000 / (60 * pace);
-}
-
-function speedToPace(speed: number): number {
-  /// Converts speed in meters per second into pace in minutes per kilometers
-  return 1000 / (60 * speed);
+function paceSpeedConversion(paceOrSpeed: number): number {
+  /// Converts pace in minutes per kilometers into speed in meters per second or
+  /// the other way around
+  return 1000 / (60 * paceOrSpeed);
 }
 
 export function getDistance(pace: number, durationInMinutes: number): ISegment {
-  const speed = paceToSpeed(pace);
+  const speed = paceSpeedConversion(pace);
   const duration = durationInMinutes * 60;
   return {
     distance: speed * duration,
@@ -27,7 +23,7 @@ export function getDistance(pace: number, durationInMinutes: number): ISegment {
 }
 
 export function getDuration(pace: number, distanceInKm: number): ISegment {
-  const speed = paceToSpeed(pace);
+  const speed = paceSpeedConversion(pace);
   const distance = distanceInKm * 1000;
   return {
     distance,
@@ -58,13 +54,11 @@ export const Segment: React.FC<ISegment> = ({
   duration,
   speed,
 }: ISegment) => {
-  console.log(speed);
-  console.log(speedToPace(speed));
   return (
     <div className="text-white bg-gradient-to-r from-green-400 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm my-2 p-4">
       <div>Distance: {displayNumber(distance / 1000)}km</div>
       <div>Duration: {displayNumber(duration / 60)}min</div>
-      <div>Pace: {displayNumber(speedToPace(speed))}min/km</div>
+      <div>Pace: {displayNumber(paceSpeedConversion(speed))}min/km</div>
     </div>
   );
 };
