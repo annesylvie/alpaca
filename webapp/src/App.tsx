@@ -1,11 +1,12 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import "./App.css";
 import { Segment, ISegment } from "./Box";
-import { FormCreator } from "./Form";
+import { Form } from "./Form";
 
 function App() {
   const [segments, setSegments] = useState<Array<ISegment>>([]);
   const [showFields, setShowFields] = useState(false);
+  console.log(segments);
 
   return (
     <div className="grid place-items-center">
@@ -14,10 +15,10 @@ function App() {
           <Segment
             distance={segment.distance}
             duration={segment.duration}
-            pace={segment.pace}
+            speed={segment.speed}
           />
         ))}
-        <FormCreator
+        <Form
           showFields={showFields}
           setShowFields={setShowFields}
           segments={segments}
