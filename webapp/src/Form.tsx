@@ -101,7 +101,7 @@ function ConversionButton(props: {
   return (
     <button
       type="submit"
-      className="text-white bg-blue-700 font-medium rounded-lg text-sm text-center px-5 py-2.5 my-2"
+      className="text-white bg-blue-700 font-medium rounded-lg text-sm text-center px-5 py-2.5 mx-2 my-2"
       onClick={() => {
         props.setConversionKind(props.conversionKind);
         props.setStep(2);
@@ -147,7 +147,7 @@ export function ConversionInputFormInput(props: {
 }) {
   return (
     <div>
-      <label className="block text-gray-700 text-sm font-bold my-2">
+      <label className="block text-gray-700 text-sm font-bold mt-2">
         {props.label}
       </label>
       <input
@@ -166,6 +166,7 @@ export function ConversionInputForm(props: {
   inputNames: Array<string>;
   onChange: ChangeEventHandler<HTMLElement>;
   onSubmit: FormEventHandler<HTMLElement>;
+  setStep: Dispatch<SetStateAction<number>>;
 }) {
   return (
     <div className="w-full max-w-xs">
@@ -183,12 +184,20 @@ export function ConversionInputForm(props: {
           inputName={props.inputNames[1]}
           onChange={props.onChange}
         />
-        <div className="flex items-center">
+        <div className="flex items-center justify-between">
           <button
             type="submit"
             className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
           >
             Submit
+          </button>
+          <button
+            className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
+            onClick={() => {
+              props.setStep(1);
+            }}
+          >
+            Back
           </button>
         </div>
       </form>
@@ -237,6 +246,7 @@ export function ConversionInput(props: {
       inputNames={["duration", "distance"]}
       onChange={onChange}
       onSubmit={onSubmit}
+      setStep={props.setStep}
     />
   ) : props.conversionKind === ConversionKind.ToDuration ? (
     <ConversionInputForm
@@ -244,6 +254,7 @@ export function ConversionInput(props: {
       inputNames={["pace", "distance"]}
       onChange={onChange}
       onSubmit={onSubmit}
+      setStep={props.setStep}
     />
   ) : props.conversionKind === ConversionKind.ToDistance ? (
     <ConversionInputForm
@@ -251,6 +262,7 @@ export function ConversionInput(props: {
       inputNames={["pace", "duration"]}
       onChange={onChange}
       onSubmit={onSubmit}
+      setStep={props.setStep}
     />
   ) : null;
 }

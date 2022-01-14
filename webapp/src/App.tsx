@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import "./App.css";
-import { Segment, ISegment } from "./Box";
+import { Segment, ISegment, sumSegments } from "./Box";
 import { Form } from "./Form";
 
 function App() {
   const [segments, setSegments] = useState<Array<ISegment>>([]);
-  console.log(segments);
+  const tally = useMemo(() => sumSegments(segments), [segments]);
 
   return (
     <div className="grid place-items-center">
@@ -15,8 +15,15 @@ function App() {
             distance={segment.distance}
             duration={segment.duration}
             speed={segment.speed}
+            isTally={false}
           />
         ))}
+        <Segment
+          distance={tally.distance}
+          duration={tally.duration}
+          speed={tally.speed}
+          isTally={true}
+        />
         <Form segments={segments} setSegments={setSegments} />
       </div>
     </div>
