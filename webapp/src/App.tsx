@@ -1,23 +1,27 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import "./App.css";
-import { Box } from "./Box";
+import { Segment, ISegment } from "./Box";
 import { FormCreator } from "./Form";
 
 function App() {
-  const [boxes, setBoxes] = useState<Array<string>>([]);
+  const [segments, setSegments] = useState<Array<ISegment>>([]);
   const [showFields, setShowFields] = useState(false);
 
   return (
     <div className="grid place-items-center">
       <div className="bg-gray-200 rounded-lg m-4 p-4 ">
-        {boxes.map((box) => (
-          <Box fieldName={box} />
+        {segments.map((segment) => (
+          <Segment
+            distance={segment.distance}
+            duration={segment.duration}
+            pace={segment.pace}
+          />
         ))}
         <FormCreator
           showFields={showFields}
           setShowFields={setShowFields}
-          boxes={boxes}
-          setBoxes={setBoxes}
+          segments={segments}
+          setSegments={setSegments}
         />
       </div>
     </div>
