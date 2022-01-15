@@ -5,7 +5,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import { ISegment, getPace, getDistance, getDuration } from "./Box";
+import {ISegment, getPace, getDistance, getDuration} from "./Segment";
 
 export const useForm = (
   callback: any,
@@ -18,7 +18,7 @@ export const useForm = (
   const [values, setValues] = useState(initialState);
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
+    setValues({...values, [event.target.name]: event.target.value});
   };
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -216,8 +216,8 @@ export function ConversionInput(props: {
   conversionKind: ConversionKind;
   setConversionKind: Dispatch<SetStateAction<ConversionKind | null>>;
 }) {
-  const initialState = { distance: null, duration: null, pace: null };
-  const { onChange, onSubmit, values } = useForm(
+  const initialState = {distance: null, duration: null, pace: null};
+  const {onChange, onSubmit, values} = useForm(
     addSegmentCallback,
     initialState
   );
@@ -230,10 +230,10 @@ export function ConversionInput(props: {
       props.conversionKind === ConversionKind.ToPace
         ? getPace(distance, duration)
         : props.conversionKind === ConversionKind.ToDuration
-        ? getDuration(pace, distance)
-        : props.conversionKind === ConversionKind.ToDistance
-        ? getDistance(pace, duration)
-        : unreachable(props.conversionKind);
+          ? getDuration(pace, distance)
+          : props.conversionKind === ConversionKind.ToDistance
+            ? getDistance(pace, duration)
+            : unreachable(props.conversionKind);
 
     props.setSegments((segments) => [...segments, newSegment]);
     props.setConversionKind(null);

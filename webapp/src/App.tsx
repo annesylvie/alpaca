@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import {useState, useEffect, useMemo} from "react";
 import "./App.css";
-import { Segment, ISegment, sumSegments } from "./Box";
-import { Form } from "./Form";
+import {Segment, ISegment, sumSegments} from "./Segment";
+import {Form} from "./Form";
 
 function App() {
   const [segments, setSegments] = useState<Array<ISegment>>([]);
@@ -31,9 +31,9 @@ function App() {
 }
 
 function MyComponent() {
-  const [error, setError] = useState<{ message: string } | null>(null);
+  const [error, setError] = useState<{message: string} | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
-  const [items, setItems] = useState<{ message: string } | null>(null);
+  const [items, setItems] = useState<{message: string} | null>(null);
 
   useEffect(() => {
     fetch("http://localhost:8000/hello/boo")
