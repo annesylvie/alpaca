@@ -63,6 +63,25 @@ function displayNumber(numberToDisplay: number): string {
   return isNaN(numberToDisplay) ? "—" : numberToDisplay.toFixed(2);
 }
 
+function secondsToHMSString(seconds: number): string {
+  const date = new Date(seconds * 1000);
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes();
+  const secondsToDisplay = date.getUTCSeconds();
+  let stringWithHours = hours > 0 ? `${hours}h` : "";
+  let stringWithMinutes = stringWithHours.concat(minutes > 0 ? `${minutes}min` : "");
+  let stringWithSeconds = stringWithMinutes.concat(secondsToDisplay > 0 ? `${secondsToDisplay}s` : "");
+  return stringWithSeconds;
+}
+
+function displayPace(seconds: number): string {
+  return isNaN(seconds) ? "—min/km" : `${secondsToHMSString(seconds)}/km`;
+}
+
+function displayDuration(seconds: number): string {
+  return seconds === 0 ? "0s" : secondsToHMSString(seconds);
+}
+
 export interface SegmentProps {
   distance: number; // In meters
   duration: number; // In seconds
@@ -85,8 +104,8 @@ export const Segment: React.FC<SegmentProps> = ({
     >
       {isTally ? <div className="mb-1 text-base">Total</div> : null}
       <div>Distance: {displayNumber(distance / 1000)}km</div>
-      <div>Duration: {displayNumber(duration / 60)}min</div>
-      <div>Pace: {displayNumber(paceSpeedConversion(speed))}min/km</div>
+      <div>Duration: {displayDuration(duration)}</div>
+      <div>Pace: {displayPace(1000 / speed)}</div>
     </div>
   );
 };
