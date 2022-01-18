@@ -6,15 +6,8 @@ export interface ISegment {
   speed: number; // In meters per second
 }
 
-function paceSpeedConversion(paceOrSpeed: number): number {
-  /// Converts pace in minutes per kilometers into speed in meters per second or
-  /// the other way around
-  return 1000 / (60 * paceOrSpeed);
-}
-
-export function getDistance(pace: number, durationInMinutes: number): ISegment {
-  const speed = paceSpeedConversion(pace);
-  const duration = durationInMinutes * 60;
+export function getDistance(pace: number, duration: number): ISegment {
+  const speed = 1000 / pace;
   return {
     distance: speed * duration,
     duration,
@@ -23,7 +16,7 @@ export function getDistance(pace: number, durationInMinutes: number): ISegment {
 }
 
 export function getDuration(pace: number, distanceInKm: number): ISegment {
-  const speed = paceSpeedConversion(pace);
+  const speed = 1000 / pace;
   const distance = distanceInKm * 1000;
   return {
     distance,
@@ -34,9 +27,8 @@ export function getDuration(pace: number, distanceInKm: number): ISegment {
 
 export function getPace(
   distanceInKm: number,
-  durationInMinutes: number
+  duration: number
 ): ISegment {
-  const duration = durationInMinutes * 60;
   const distance = distanceInKm * 1000;
   return {
     distance,

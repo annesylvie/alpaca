@@ -209,6 +209,22 @@ export function unreachable(state: never): never {
   throw new Error(`This state should be unreachable: ${state} `);
 }
 
+function hmsToSeconds(input: string): number {
+  let hmsSplit = input.split(':');
+  let seconds = 0;
+  let minutes = 1;
+
+  while (hmsSplit.length > 0) {
+    const nextHmsElement = hmsSplit.pop();
+    if (nextHmsElement !== undefined) {
+      seconds += minutes * parseInt(nextHmsElement, 10);
+      minutes *= 60;
+    }
+  }
+
+  return seconds;
+}
+
 export function ConversionInput(props: {
   setStep: Dispatch<SetStateAction<number>>;
   segments: Array<ISegment>;
@@ -223,17 +239,27 @@ export function ConversionInput(props: {
   );
 
   async function addSegmentCallback() {
-    const distance = values["distance"] as unknown as number;
-    const duration = values["duration"] as unknown as number;
-    const pace = values["pace"] as unknown as number;
-    const newSegment =
-      props.conversionKind === ConversionKind.ToPace
-        ? getPace(distance, duration)
-        : props.conversionKind === ConversionKind.ToDuration
-          ? getDuration(pace, distance)
-          : props.conversionKind === ConversionKind.ToDistance
-            ? getDistance(pace, duration)
-            : unreachable(props.conversionKind);
+    let distance;
+    let pace;
+    let duration;
+    let newSegment: ISegment;
+    switch (props.conversionKind) {
+      case ConversionKind.ToPace:
+        distance = values.distance === null ? 0 : parseFloat(values.distance);
+        duration = values.duration === null ? 0 : hmsToSeconds(values.duration);
+        newSegment = getPace(distance, duration);
+        break;
+      case ConversionKind.ToDuration:
+        distance = values.distance === null ? 0 : parseFloat(values.distance);
+        pace = values.pace === null ? 0 : hmsToSeconds(values.pace);
+        newSegment = getDuration(pace, distance);
+        break;
+      case ConversionKind.ToDistance:
+        duration = values.duration === null ? 0 : hmsToSeconds(values.duration);
+        pace = values.pace === null ? 0 : hmsToSeconds(values.pace);
+        newSegment = getDistance(pace, duration);
+        break;
+    }
 
     props.setSegments((segments) => [...segments, newSegment]);
     props.setConversionKind(null);
@@ -242,7 +268,7 @@ export function ConversionInput(props: {
 
   return props.conversionKind === ConversionKind.ToPace ? (
     <ConversionInputForm
-      labels={["Duration (in min)", "Distance (in km)"]}
+      labels={["Duration (in hh:mm:ss)", "Distance (in km)"]}
       inputNames={["duration", "distance"]}
       onChange={onChange}
       onSubmit={onSubmit}
@@ -250,7 +276,7 @@ export function ConversionInput(props: {
     />
   ) : props.conversionKind === ConversionKind.ToDuration ? (
     <ConversionInputForm
-      labels={["Pace (in min/km)", "Distance (in km)"]}
+      labels={["Pace (in hh:mm:ss/km)", "Distance (in km)"]}
       inputNames={["pace", "distance"]}
       onChange={onChange}
       onSubmit={onSubmit}
@@ -258,7 +284,7 @@ export function ConversionInput(props: {
     />
   ) : props.conversionKind === ConversionKind.ToDistance ? (
     <ConversionInputForm
-      labels={["Pace (in min/km)", "Duration (in min)"]}
+      labels={["Pace (in hh:mm:ss/km)", "Duration (in hh:mm:ss)"]}
       inputNames={["pace", "duration"]}
       onChange={onChange}
       onSubmit={onSubmit}
