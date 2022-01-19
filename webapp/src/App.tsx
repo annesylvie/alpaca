@@ -24,7 +24,7 @@ function App() {
           speed={tally.speed}
           isTally={true}
         />
-        <Form segments={segments} setSegments={setSegments} />
+        <Form setSegments={setSegments} />
       </div>
     </div>
   );
