@@ -1,37 +1,11 @@
 import React, {
   ChangeEventHandler,
-  FormEventHandler,
   useState,
   Dispatch,
   SetStateAction,
 } from "react";
 import {ISegment, getPace, getDistance, getDuration} from "./Segment";
 
-export const useForm = (
-  callback: any,
-  initialState: {
-    distance: string | null;
-    duration: string | null;
-    pace: string | null;
-  }
-) => {
-  const [values, setValues] = useState(initialState);
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValues({...values, [event.target.name]: event.target.value});
-  };
-
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await callback();
-  };
-
-  return {
-    onChange,
-    onSubmit,
-    values,
-  };
-};
 
 enum ConversionKind {
   ToPace,
@@ -40,43 +14,24 @@ enum ConversionKind {
 }
 
 interface IFormProps {
-  segments: Array<ISegment>;
   setSegments: Dispatch<SetStateAction<Array<ISegment>>>;
 }
 
-export const Form: React.FC<IFormProps> = ({
-  segments,
-  setSegments,
-}: IFormProps) => {
+export const Form: React.FC<IFormProps> = ({setSegments}: IFormProps) => {
   const [step, setStep] = useState(0);
-  const [conversionKind, setConversionKind] = useState<null | ConversionKind>(
-    null
-  );
   return (
     <div className="flex justify-center">
       {step === 0 ? (
         <AddNewButton setStep={setStep} />
-      ) : step === 1 ? (
-        <ConversionSelector
-          setStep={setStep}
-          setConversionKind={setConversionKind}
-        />
       ) : (
-        <ConversionInput
-          setStep={setStep}
-          segments={segments}
-          setSegments={setSegments}
-          conversionKind={
-            conversionKind === null ? ConversionKind.ToDuration : conversionKind
-          }
-          setConversionKind={setConversionKind}
-        />
-      )}
+        <Convertor setStep={setStep} setSegments={setSegments} />
+      )
+      }
     </div>
   );
 };
 
-export function AddNewButton(props: {
+function AddNewButton(props: {
   setStep: Dispatch<SetStateAction<number>>;
 }) {
   return (
@@ -92,58 +47,13 @@ export function AddNewButton(props: {
   );
 }
 
-function ConversionButton(props: {
-  conversionName: string;
-  conversionKind: ConversionKind;
-  setConversionKind: Dispatch<SetStateAction<ConversionKind | null>>;
-  setStep: Dispatch<SetStateAction<number>>;
-}) {
-  return (
-    <button
-      type="submit"
-      className="text-white bg-blue-700 font-medium rounded-lg text-sm text-center px-5 py-2.5 mx-2 my-2"
-      onClick={() => {
-        props.setConversionKind(props.conversionKind);
-        props.setStep(2);
-      }}
-    >
-      {props.conversionName}
-    </button>
-  );
-}
 
-export function ConversionSelector(props: {
-  setStep: Dispatch<SetStateAction<number>>;
-  setConversionKind: Dispatch<SetStateAction<ConversionKind | null>>;
-}) {
-  return (
-    <div>
-      <ConversionButton
-        conversionName={"Distance"}
-        conversionKind={ConversionKind.ToDistance}
-        setConversionKind={props.setConversionKind}
-        setStep={props.setStep}
-      />
-      <ConversionButton
-        conversionName={"Duration"}
-        conversionKind={ConversionKind.ToDuration}
-        setConversionKind={props.setConversionKind}
-        setStep={props.setStep}
-      />
-      <ConversionButton
-        conversionName={"Pace"}
-        conversionKind={ConversionKind.ToPace}
-        setConversionKind={props.setConversionKind}
-        setStep={props.setStep}
-      />
-    </div>
-  );
-}
-
-export function ConversionInputFormInput(props: {
+function ConversionInputFormInput(props: {
   label: string;
   inputName: string;
+  placeholder: string;
   onChange: ChangeEventHandler<HTMLElement>;
+  disabled: boolean
 }) {
   return (
     <div>
@@ -155,59 +65,15 @@ export function ConversionInputFormInput(props: {
         id={`alpaca-${props.inputName}`}
         name={props.inputName}
         onChange={props.onChange}
+        disabled={props.disabled}
         required
+        placeholder={props.placeholder}
       />
     </div>
   );
 }
 
-export function ConversionInputForm(props: {
-  labels: Array<string>;
-  inputNames: Array<string>;
-  onChange: ChangeEventHandler<HTMLElement>;
-  onSubmit: FormEventHandler<HTMLElement>;
-  setStep: Dispatch<SetStateAction<number>>;
-}) {
-  return (
-    <div className="w-full max-w-xs">
-      <form
-        onSubmit={props.onSubmit}
-        className="bg-white shadow-md rounded px-8 py-6 mb-4"
-      >
-        <ConversionInputFormInput
-          label={props.labels[0]}
-          inputName={props.inputNames[0]}
-          onChange={props.onChange}
-        />
-        <ConversionInputFormInput
-          label={props.labels[1]}
-          inputName={props.inputNames[1]}
-          onChange={props.onChange}
-        />
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
-          >
-            Submit
-          </button>
-          <button
-            className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
-            onClick={() => {
-              props.setStep(1);
-            }}
-          >
-            Back
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-}
 
-export function unreachable(state: never): never {
-  throw new Error(`This state should be unreachable: ${state} `);
-}
 
 function hmsToSeconds(input: string): number {
   let hmsSplit = input.split(':');
@@ -225,70 +91,137 @@ function hmsToSeconds(input: string): number {
   return seconds;
 }
 
-export function ConversionInput(props: {
-  setStep: Dispatch<SetStateAction<number>>;
-  segments: Array<ISegment>;
+function isSet(value: string | null): boolean {
+  return value === null ? false : value.length > 0 ? true : false;
+}
+
+const useConvertor = (
+  addSegmentCallback: any,
+) => {
+  const initialSegmentState = {distance: null, duration: null, pace: null};
+  const [segment, setSegment] = useState(initialSegmentState);
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSegment({...segment, [event.target.name]: event.target.value});
+  };
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await addSegmentCallback();
+  };
+
+  return {
+    onChange,
+    onSubmit,
+    segment,
+  };
+};
+
+
+function Convertor(props: {
   setSegments: Dispatch<SetStateAction<Array<ISegment>>>;
-  conversionKind: ConversionKind;
-  setConversionKind: Dispatch<SetStateAction<ConversionKind | null>>;
+  setStep: Dispatch<SetStateAction<number>>;
 }) {
-  const initialState = {distance: null, duration: null, pace: null};
-  const {onChange, onSubmit, values} = useForm(
+
+  const {onChange, onSubmit, segment} = useConvertor(
     addSegmentCallback,
-    initialState
   );
 
+  let disablePace, disableDistance, disableDuration;
+  let conversionKind: ConversionKind | null;
+  if (
+    isSet(segment.pace) && isSet(segment.duration) && isSet(segment.distance)
+  ) {
+    console.log("Error, defaulting to converting to distance");
+    disablePace = false; disableDistance = true; disableDuration = false;
+    conversionKind = ConversionKind.ToDistance;
+  }
+  else if (isSet(segment.pace) && isSet(segment.distance)) {
+    disablePace = false; disableDistance = false; disableDuration = true;
+    conversionKind = ConversionKind.ToDuration;
+  }
+  else if (isSet(segment.pace) && isSet(segment.duration)) {
+    disablePace = false; disableDistance = true; disableDuration = false;
+    conversionKind = ConversionKind.ToDistance;
+  }
+  else if (isSet(segment.duration) && isSet(segment.distance)) {
+    disablePace = true; disableDistance = false; disableDuration = false;
+    conversionKind = ConversionKind.ToPace;
+  }
+  else {
+    disablePace = false; disableDistance = false; disableDuration = false;
+    conversionKind = null;
+  }
+
   async function addSegmentCallback() {
-    let distance;
-    let pace;
-    let duration;
-    let newSegment: ISegment;
-    switch (props.conversionKind) {
+    let newSegment: ISegment, pace, duration, distance;
+    switch (conversionKind) {
       case ConversionKind.ToPace:
-        distance = values.distance === null ? 0 : parseFloat(values.distance);
-        duration = values.duration === null ? 0 : hmsToSeconds(values.duration);
+        distance = segment.distance === null ? 0 : parseFloat(segment.distance);
+        duration = segment.duration === null ? 0 : hmsToSeconds(segment.duration);
         newSegment = getPace(distance, duration);
         break;
       case ConversionKind.ToDuration:
-        distance = values.distance === null ? 0 : parseFloat(values.distance);
-        pace = values.pace === null ? 0 : hmsToSeconds(values.pace);
+        distance = segment.distance === null ? 0 : parseFloat(segment.distance);
+        pace = segment.pace === null ? 0 : hmsToSeconds(segment.pace);
         newSegment = getDuration(pace, distance);
         break;
       case ConversionKind.ToDistance:
-        duration = values.duration === null ? 0 : hmsToSeconds(values.duration);
-        pace = values.pace === null ? 0 : hmsToSeconds(values.pace);
+        duration = segment.duration === null ? 0 : hmsToSeconds(segment.duration);
+        pace = segment.pace === null ? 0 : hmsToSeconds(segment.pace);
         newSegment = getDistance(pace, duration);
         break;
+      case null:
+        throw new Error(`This state should be unreachable: ${conversionKind} `);
     }
-
     props.setSegments((segments) => [...segments, newSegment]);
-    props.setConversionKind(null);
     props.setStep(0);
   }
 
-  return props.conversionKind === ConversionKind.ToPace ? (
-    <ConversionInputForm
-      labels={["Duration (in hh:mm:ss)", "Distance (in km)"]}
-      inputNames={["duration", "distance"]}
-      onChange={onChange}
+  return <div>
+    <form
       onSubmit={onSubmit}
-      setStep={props.setStep}
-    />
-  ) : props.conversionKind === ConversionKind.ToDuration ? (
-    <ConversionInputForm
-      labels={["Pace (in hh:mm:ss/km)", "Distance (in km)"]}
-      inputNames={["pace", "distance"]}
-      onChange={onChange}
-      onSubmit={onSubmit}
-      setStep={props.setStep}
-    />
-  ) : props.conversionKind === ConversionKind.ToDistance ? (
-    <ConversionInputForm
-      labels={["Pace (in hh:mm:ss/km)", "Duration (in hh:mm:ss)"]}
-      inputNames={["pace", "duration"]}
-      onChange={onChange}
-      onSubmit={onSubmit}
-      setStep={props.setStep}
-    />
-  ) : null;
+      className="bg-white shadow-md rounded px-8 py-6 mb-4"
+    >
+      <ConversionInputFormInput
+        label="Pace"
+        inputName="pace"
+        onChange={onChange}
+        disabled={disablePace}
+        placeholder="hh:mm:ss (per km)"
+      />
+      <ConversionInputFormInput
+        label="Duration"
+        inputName="duration"
+        onChange={onChange}
+        disabled={disableDuration}
+        placeholder="hh:mm:ss"
+      />
+      <ConversionInputFormInput
+        label="Distance"
+        inputName="distance"
+        onChange={onChange}
+        disabled={disableDistance}
+        placeholder="km"
+      />
+      <div className="flex items-center justify-between">
+        <button
+          type="submit"
+          className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
+        >
+          Submit
+        </button>
+        <button
+          className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
+          onClick={() => {
+            props.setStep(0);
+          }}
+        >
+          Back
+        </button>
+      </div>
+    </form>
+  </div>
+
 }
+
