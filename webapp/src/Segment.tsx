@@ -40,7 +40,7 @@ export function getPace(
 export function sumSegments(segments: Array<ISegment>): ISegment {
   let totalDistance = 0;
   let totalDuration = 0;
-  segments.map((segment) => {
+  segments.forEach((segment) => {
     totalDuration += segment.duration;
     totalDistance += segment.distance;
   });
