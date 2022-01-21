@@ -54,11 +54,23 @@ function ConversionInputFormInput(props: {
   placeholder: string;
   onChange: ChangeEventHandler<HTMLElement>;
   disabled: boolean
+  pattern: string;
+  tooltipContent: string;
 }) {
   return (
     <div>
-      <label className="block text-gray-700 text-sm font-bold mt-2">
-        {props.label}
+      <label className="block text-gray-700 text-sm mt-2">
+        <div className="flex justify-between">
+          <div className="pl-2 font-bold"> {props.label} </div>
+          <div className="group pr-2">
+            <p >
+              ?
+              <span className="tooltip-text max-w-[13rem] bg-gray-200 rounded hidden group-hover:block absolute text-center py-2 px-6 z-50&quot;">
+                {props.tooltipContent}
+              </span>
+            </p>
+          </div>
+        </div>
       </label>
       <input
         className="shadow appearance-none border rounded w-full my-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -68,6 +80,7 @@ function ConversionInputFormInput(props: {
         disabled={props.disabled}
         required
         placeholder={props.placeholder}
+        pattern={props.pattern}
       />
     </div>
   );
@@ -117,6 +130,9 @@ const useConvertor = (
   };
 };
 
+//let timeInputPattern = /^\d{0,2}:?\d{0,2}:?\d{1,2}$/;
+let timeInputPattern = "^\\d*:?\\d*:?\\d+$";
+let distanceInputPattern = "\\d+.?\\d*";
 
 function Convertor(props: {
   setSegments: Dispatch<SetStateAction<Array<ISegment>>>;
@@ -189,6 +205,8 @@ function Convertor(props: {
         onChange={onChange}
         disabled={disablePace}
         placeholder="hh:mm:ss (per km)"
+        pattern={timeInputPattern}
+        tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
       />
       <ConversionInputFormInput
         label="Duration"
@@ -196,6 +214,8 @@ function Convertor(props: {
         onChange={onChange}
         disabled={disableDuration}
         placeholder="hh:mm:ss"
+        pattern={timeInputPattern}
+        tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
       />
       <ConversionInputFormInput
         label="Distance"
@@ -203,6 +223,8 @@ function Convertor(props: {
         onChange={onChange}
         disabled={disableDistance}
         placeholder="km"
+        pattern={distanceInputPattern}
+        tooltipContent="Distance in kilometers, e.g. 4 or 1.2"
       />
       <div className="flex items-center justify-between">
         <button
