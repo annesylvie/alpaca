@@ -87,14 +87,19 @@ export const Segment: React.FC<SegmentProps> = ({
   speed,
   isTally,
 }: SegmentProps) => {
-  const color = isTally
-    ? "from-red-600 to-orange-500"
-    : "from-green-400 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800";
+  let backgroundColor, textColor;
+  if (isTally) {
+    backgroundColor = "bg-gradient-to-r from-gold to-orange hover:bg-gradient-to-br focus:ring-4 focus:ring-orange dark:focus:ring-gold";
+    textColor = "text-blue-800";
+  } else {
+    backgroundColor = "bg-gradient-to-r from-blue-500 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-blue-500 dark:focus:ring-blue-700";
+    textColor = "text-cream";
+  };
   return (
     <div
-      className={`text-white bg-gradient-to-r ${color} font-medium rounded-lg text-sm my-2 p-4`}
+      className={`${textColor} ${backgroundColor} font-medium rounded-lg  my-2 p-4`}
     >
-      {isTally ? <div className="mb-1 text-base">Total</div> : null}
+      {isTally ? <div className="mb-1">Total</div> : null}
       <div>Distance: {displayNumber(distance / 1000)}km</div>
       <div>Duration: {displayDuration(duration)}</div>
       <div>Pace: {displayPace(1000 / speed)}</div>
