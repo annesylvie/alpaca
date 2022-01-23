@@ -4,6 +4,7 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
+import {QuestionMarkCircleIcon} from '@heroicons/react/solid'
 import {ISegment, getPace, getDistance, getDuration} from "./Segment";
 
 
@@ -20,7 +21,7 @@ interface IFormProps {
 export const Form: React.FC<IFormProps> = ({setSegments}: IFormProps) => {
   const [step, setStep] = useState(0);
   return (
-    <div className="flex justify-center">
+    <div>
       {step === 0 ? (
         <AddNewButton setStep={setStep} />
       ) : (
@@ -35,10 +36,10 @@ function AddNewButton(props: {
   setStep: Dispatch<SetStateAction<number>>;
 }) {
   return (
-    <div>
+    <div className="flex justify-center">
       <button
         type="submit"
-        className="text-white bg-blue-700 font-medium rounded-lg text-sm text-center px-5 py-2.5 my-2"
+        className="text-cream bg-blue-600 font-medium rounded-lg text-center px-5 py-2.5 my-2"
         onClick={() => props.setStep(1)}
       >
         Add New
@@ -59,13 +60,13 @@ function ConversionInputFormInput(props: {
 }) {
   return (
     <div>
-      <label className="block text-gray-700 text-sm mt-2">
-        <div className="flex justify-between">
+      <label className="block mt-2">
+        <div className="flex justify-between items-center">
           <div className="pl-2 font-bold"> {props.label} </div>
           <div className="group pr-2">
-            <p >
-              ?
-              <span className="tooltip-text max-w-[13rem] bg-gray-200 rounded hidden group-hover:block absolute text-center py-2 px-6 z-50&quot;">
+            <p>
+              <QuestionMarkCircleIcon className="h-4 w-4" aria-hidden="true" />
+              <span className="tooltip-text max-w-[13rem] bg-blue-500 text-sm rounded hidden group-hover:block absolute text-center py-2 px-6 z-50&quot;">
                 {props.tooltipContent}
               </span>
             </p>
@@ -73,7 +74,7 @@ function ConversionInputFormInput(props: {
         </div>
       </label>
       <input
-        className="shadow appearance-none border rounded w-full my-2 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        className="shadow appearance-none border rounded w-full my-2 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-blue-600"
         id={`alpaca-${props.inputName}`}
         name={props.inputName}
         onChange={props.onChange}
@@ -130,7 +131,6 @@ const useConvertor = (
   };
 };
 
-//let timeInputPattern = /^\d{0,2}:?\d{0,2}:?\d{1,2}$/;
 let timeInputPattern = "^\\d*:?\\d*:?\\d+$";
 let distanceInputPattern = "\\d+.?\\d*";
 
@@ -194,56 +194,57 @@ function Convertor(props: {
     props.setStep(0);
   }
 
-  return <div>
-    <form
-      onSubmit={onSubmit}
-      className="bg-white shadow-md rounded px-8 py-6 mb-4"
-    >
-      <ConversionInputFormInput
-        label="Pace"
-        inputName="pace"
-        onChange={onChange}
-        disabled={disablePace}
-        placeholder="hh:mm:ss (per km)"
-        pattern={timeInputPattern}
-        tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
-      />
-      <ConversionInputFormInput
-        label="Duration"
-        inputName="duration"
-        onChange={onChange}
-        disabled={disableDuration}
-        placeholder="hh:mm:ss"
-        pattern={timeInputPattern}
-        tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
-      />
-      <ConversionInputFormInput
-        label="Distance"
-        inputName="distance"
-        onChange={onChange}
-        disabled={disableDistance}
-        placeholder="km"
-        pattern={distanceInputPattern}
-        tooltipContent="Distance in kilometers, e.g. 4 or 1.2"
-      />
-      <div className="flex items-center justify-between">
-        <button
-          type="submit"
-          className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
-        >
-          Submit
-        </button>
-        <button
-          className="text-white bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center my-2"
-          onClick={() => {
-            props.setStep(0);
-          }}
-        >
-          Back
-        </button>
-      </div>
-    </form>
-  </div>
-
+  return (
+    <div>
+      <form
+        onSubmit={onSubmit}
+        className="bg-blue-700 rounded px-8 py-6 mb-4 text-cream"
+      >
+        <ConversionInputFormInput
+          label="Pace"
+          inputName="pace"
+          onChange={onChange}
+          disabled={disablePace}
+          placeholder="hh:mm:ss (per km)"
+          pattern={timeInputPattern}
+          tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+        />
+        <ConversionInputFormInput
+          label="Duration"
+          inputName="duration"
+          onChange={onChange}
+          disabled={disableDuration}
+          placeholder="hh:mm:ss"
+          pattern={timeInputPattern}
+          tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+        />
+        <ConversionInputFormInput
+          label="Distance"
+          inputName="distance"
+          onChange={onChange}
+          disabled={disableDistance}
+          placeholder="km"
+          pattern={distanceInputPattern}
+          tooltipContent="Distance in kilometers, e.g. 4 or 1.2"
+        />
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            className="text-cream bg-blue-500 font-medium rounded-lg px-5 py-2.5 text-center my-2"
+          >
+            Submit
+          </button>
+          <button
+            className="text-cream bg-blue-500 font-medium rounded-lg px-5 py-2.5 text-center my-2"
+            onClick={() => {
+              props.setStep(0);
+            }}
+          >
+            Back
+          </button>
+        </div>
+      </form>
+    </div>
+  );
 }
 
