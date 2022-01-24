@@ -56,7 +56,7 @@ function displayNumber(numberToDisplay: number): string {
 }
 
 function secondsToHMSString(seconds: number): string {
-  const date = new Date(seconds * 1000);
+  const date = new Date(Math.round(seconds * 1000));
   const hours = date.getUTCHours();
   const minutes = date.getUTCMinutes();
   const secondsToDisplay = date.getUTCSeconds();
