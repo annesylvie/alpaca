@@ -52,10 +52,13 @@ export function sumSegments(segments: Array<ISegment>): ISegment {
 }
 
 function displayNumber(numberToDisplay: number): string {
-  return isNaN(numberToDisplay) ? "—" : numberToDisplay.toFixed(2);
+  return Number.isFinite(numberToDisplay) ? numberToDisplay.toFixed(2) : "—";
 }
 
 function secondsToHMSString(seconds: number): string {
+  if (seconds === 0) {
+    return "0s";
+  }
   const date = new Date(Math.round(seconds * 1000));
   const hours = date.getUTCHours();
   const minutes = date.getUTCMinutes();
@@ -67,11 +70,11 @@ function secondsToHMSString(seconds: number): string {
 }
 
 function displayPace(seconds: number): string {
-  return isNaN(seconds) ? "—min/km" : `${secondsToHMSString(seconds)}/km`;
+  return Number.isFinite(seconds) ? `${secondsToHMSString(seconds)}/km` : "—min/km";
 }
 
 function displayDuration(seconds: number): string {
-  return seconds === 0 ? "0s" : secondsToHMSString(seconds);
+  return secondsToHMSString(seconds);
 }
 
 export interface SegmentProps {
