@@ -2,6 +2,7 @@ import "./App.css";
 import {SegmentsPage} from "./SegmentsPage";
 import {TopBanner} from "./TopBanner";
 import {About} from "./About";
+import {Settings} from "./Settings";
 import {
   Routes,
   Route
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SegmentsPage />} />
         <Route path="about" element={<About />} />
+        <Route path="settings" element={<Settings />} />
       </Routes>
     </div>
   );
