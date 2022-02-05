@@ -10,7 +10,7 @@ import {
 
 function App() {
   return (
-    <div className="bg-blue-800 h-screen">
+    <div className="bg-blue-800 min-h-screen">
       <TopBanner />
       <Routes>
         <Route path="/" element={<SegmentsPage />} />
