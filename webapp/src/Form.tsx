@@ -49,7 +49,7 @@ function AddNewButton(props: {
 }
 
 
-function ConversionInputFormInput(props: {
+export function ConversionInputFormInput(props: {
   label: string;
   inputName: string;
   placeholder: string;
@@ -131,7 +131,7 @@ const useConvertor = (
   };
 };
 
-let timeInputPattern = "^\\d*:?\\d*:?\\d+$";
+export let timeInputPattern = "^\\d*:?\\d*:?\\d+$";
 let distanceInputPattern = "\\d+.?\\d*";
 
 function Convertor(props: {

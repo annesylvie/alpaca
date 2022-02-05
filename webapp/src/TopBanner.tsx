@@ -1,4 +1,4 @@
-import {QuestionMarkCircleIcon, FireIcon} from '@heroicons/react/solid'
+import {QuestionMarkCircleIcon, FireIcon, CogIcon} from '@heroicons/react/solid'
 import {Link} from "react-router-dom";
 
 export function TopBanner() {
@@ -22,8 +22,17 @@ export function TopBanner() {
                 type="button"
                 className="-mr-1 flex p-2"
               >
-                <span className="sr-only">Dismiss</span>
                 <QuestionMarkCircleIcon className="h-6 w-6 text-cream" aria-hidden="true" />
+              </button>
+            </Link>
+          </div>
+          <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
+            <Link to="/settings">
+              <button
+                type="button"
+                className="-mr-1 flex p-2"
+              >
+                <CogIcon className="h-6 w-6 text-cream" aria-hidden="true" />
               </button>
             </Link>
           </div>
