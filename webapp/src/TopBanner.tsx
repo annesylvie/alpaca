@@ -1,4 +1,5 @@
-import {QuestionMarkCircleIcon, FireIcon, CogIcon} from '@heroicons/react/solid'
+import {QuestionMarkCircleIcon, CogIcon} from '@heroicons/react/solid'
+import {ReactComponent as Logo} from './Assets/logo.svg';
 import {Link} from "react-router-dom";
 
 export function TopBanner() {
@@ -8,9 +9,9 @@ export function TopBanner() {
         <div className="flex items-center justify-between flex-wrap">
           <div className="w-0 flex-1 flex items-center">
             <Link to="/">
-              <button type="button" className="flex p-2 rounded-lg">
-                <FireIcon className="h-6 w-6 text-cream" aria-hidden="true" />
-                <p className="ml-3 text-xl font-bold text-cream truncate">
+              <button type="button" className="flex rounded-lg items-center">
+                <Logo className="h-14 w-14 text-cream" aria-hidden="true" />
+                <p className="ml-2 text-xl font-bold text-cream truncate">
                   <span className="hidden md:inline">Alpaca</span>
                 </p>
               </button>
