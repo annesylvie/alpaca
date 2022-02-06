@@ -5,7 +5,8 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import {ConversionInputFormInput, timeInputPattern} from "./Form";
+import {InputLine, timeInputPattern} from "./FormEntry";
+import {SubmitButton} from "./Utils/Button";
 
 export function Settings() {
   return <div className="flex justify-center">
@@ -121,8 +122,8 @@ export function CustomPacesForm(
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <ConversionInputFormInput
-          label="Name"
+        <InputLine
+          inputTitle="Name"
           inputName="name"
           onChange={onChange}
           disabled={false}
@@ -130,8 +131,8 @@ export function CustomPacesForm(
           pattern={"^[\\w /:-.(),@]+$"}
           tooltipContent="Valid characters for name are letters, numbers, and some basic punctuations. Max 32 characters."
         />
-        <ConversionInputFormInput
-          label="Pace"
+        <InputLine
+          inputTitle="Pace"
           inputName="pace"
           onChange={onChange}
           disabled={false}
@@ -139,12 +140,7 @@ export function CustomPacesForm(
           pattern={timeInputPattern}
           tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
         />
-        <button
-          type="submit"
-          className="text-cream bg-blue-500 font-medium rounded-lg px-5 py-2.5 text-center my-2"
-        >
-          Submit
-        </button>
+        <SubmitButton />
       </form>
     </div>
   );

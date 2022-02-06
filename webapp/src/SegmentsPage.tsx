@@ -1,6 +1,8 @@
 import {useState, useMemo} from "react";
-import {Segment, ISegment, sumSegments} from "./Segment";
-import {Form} from "./Form";
+import {Segment} from "./Segment";
+import {ISegment} from "./Utils/Interfaces";
+import {sumSegments} from "./Utils/Conversion";
+import {SegmentForm} from "./SegmentForm";
 
 export function SegmentsPage() {
   const [segments, setSegments] = useState<Array<ISegment>>([]);
@@ -23,7 +25,7 @@ export function SegmentsPage() {
           speed={tally.speed}
           isTally={true}
         />
-        <Form setSegments={setSegments} />
+        <SegmentForm setSegments={setSegments} />
       </div>
     </div>
   );
