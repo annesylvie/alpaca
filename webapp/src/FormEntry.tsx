@@ -1,14 +1,17 @@
-import React, {ChangeEventHandler} from "react";
-import {QuestionMarkCircleIcon} from '@heroicons/react/solid'
+import React, {Dispatch, SetStateAction} from "react";
+import {QuestionMarkCircleIcon} from '@heroicons/react/solid';
+import {classNames} from "./Utils/Css";
 
 export let timeInputPattern = "^\\d*:?\\d*:?\\d+$";
 export let distanceInputPattern = "\\d+.?\\d*";
 
+
 export function InputLine(props: {
+  value?: string;
   inputTitle: string;
   inputName: string;
   placeholder: string;
-  onChange: ChangeEventHandler<HTMLElement>;
+  setValue: Dispatch<SetStateAction<string | null>>,
   disabled: boolean
   pattern: string;
   tooltipContent: string;
@@ -29,14 +32,18 @@ export function InputLine(props: {
         </div>
       </label>
       <input
-        className="shadow appearance-none border rounded w-full my-2 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-blue-600"
+        className={classNames(
+          props.disabled ? "bg-blue-700 opacity-30" : "bg-blue-600",
+          "shadow appearance-none border rounded w-full my-2 py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"
+        )}
         id={`alpaca-${props.inputName}`}
         name={props.inputName}
-        onChange={props.onChange}
+        onChange={event => props.setValue(event.target.value)}
         disabled={props.disabled}
         required
         placeholder={props.placeholder}
         pattern={props.pattern}
+        value={props.value}
       />
     </div>
   );
