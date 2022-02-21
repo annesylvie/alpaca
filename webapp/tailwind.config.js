@@ -10,6 +10,9 @@ module.exports = {
         700: "#26437e",
         800: "#1d3461",
       },
+      'blueGray': {
+        600: "#475E8C"
+      },
       'gold': '#ffa630',
       'orange': "#F79256",
       'cream': '#f0f7ee',

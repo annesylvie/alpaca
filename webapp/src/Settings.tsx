@@ -25,7 +25,7 @@ export function Settings() {
 
 interface IPace {
   name: string,
-  pace: number
+  pace: string
 }
 
 function CustomPaceBox(
@@ -75,27 +75,6 @@ export function CustomPaces() {
 }
 
 
-const useForm = (
-  addCustomPaceCallback: any,
-) => {
-  const initialState = {name: "", pace: 0.0};
-  const [customPace, setCustomPace] = useState(initialState);
-
-  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomPace({...customPace, [event.target.name]: event.target.value});
-  };
-
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    await addCustomPaceCallback();
-  };
-
-  return {
-    onChange,
-    onSubmit,
-    customPace,
-  };
-};
 
 export function CustomPacesForm(
   props: {
@@ -103,10 +82,22 @@ export function CustomPacesForm(
     existingPaceNames: Set<string>
   }
 ) {
-  const {onChange, onSubmit, customPace} = useForm(addCustomPaceCallback);
+  //const {onChange, onSubmit, customPace} = useForm(addCustomPaceCallback);
+  const [paceName, setPaceName] = useState<string | null>(null);
+  const [paceValue, setPaceValue] = useState<string | null>(null);
+
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    await addCustomPaceCallback();
+  };
 
   async function addCustomPaceCallback() {
-    const newPace = customPace as IPace;
+
+    if (paceName === null || paceName.length === 0 || paceValue === null || paceValue.length === 0) {
+      alert("The name or value of the custom pace should not be empty")
+
+    }
+    const newPace = {name: paceName!, pace: paceValue!} as IPace;
     if (newPace.name.length > 32) {
       alert("Maximum 32 characters. Please choose a shorter name.")
 
@@ -123,18 +114,20 @@ export function CustomPacesForm(
     <div>
       <form onSubmit={onSubmit}>
         <InputLine
+          value={paceName === null ? undefined : paceName}
           inputTitle="Name"
           inputName="name"
-          onChange={onChange}
+          setValue={setPaceName}
           disabled={false}
           placeholder="Name of your custom pace"
           pattern={"^[\\w /:-.(),@]+$"}
           tooltipContent="Valid characters for name are letters, numbers, and some basic punctuations. Max 32 characters."
         />
         <InputLine
+          value={paceValue === null ? undefined : paceValue}
           inputTitle="Pace"
           inputName="pace"
-          onChange={onChange}
+          setValue={setPaceValue}
           disabled={false}
           placeholder="hh:mm:ss (per km)"
           pattern={timeInputPattern}
