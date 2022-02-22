@@ -1,5 +1,11 @@
 import {ISegment} from "./Interfaces";
 
+export enum Dimension {
+  Distance = "Distance",
+  Duration = "Duration",
+  Pace = "Pace"
+}
+
 /// Functions to convert from basic numbers to a ISegment
 export function getDistance(pace: number, duration: number): ISegment {
   const speed = 1000 / pace;
