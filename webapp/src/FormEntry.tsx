@@ -44,6 +44,7 @@ export function InputLine(props: {
         placeholder={props.placeholder}
         pattern={props.pattern}
         value={props.value}
+        autoComplete="off"
       />
     </div>
   );
