@@ -44,7 +44,7 @@ function AddNewButton(props: {
     <div className="flex justify-center">
       <button
         type="submit"
-        className="text-cream bg-blue-600 font-medium rounded-lg text-center px-5 py-2.5 my-2"
+        className="bg-gradient-to-r from-gold to-orange hover:bg-gradient-to-br focus:ring-4 focus:ring-orange dark:focus:ring-gold text-blue-700 font-medium rounded-lg text-center px-5 py-2.5 my-2"
         onClick={() => props.setStep(1)}
       >
         Add New
@@ -146,7 +146,7 @@ function PaceInput(props: {
         disabled={props.disabled || isDropdownActive}
         placeholder="hh:mm:ss (per km)"
         pattern={props.pattern}
-        tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+        tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:09 instead of 00:04:09."
       />
       <PaceDropdown
         setPace={props.setPace}
@@ -257,7 +257,7 @@ function Convertor(props: {
           disabled={disableDuration}
           placeholder="hh:mm:ss"
           pattern={timeInputPattern}
-          tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+          tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:09 instead of 00:04:09."
         />
         <InputLine
           inputTitle="Distance"
