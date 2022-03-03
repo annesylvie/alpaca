@@ -69,7 +69,7 @@ function PaceDropdown(props: {
   const [selectedPace, setSelectedPace] = useState<
     {name: string, pace: string | null}
   >({
-    pace: null, name: "Choose pace from custom"
+    pace: null, name: "Custom Paces"
   });
 
   const handleChange = (value: {pace: string | null, name: string}) => {
