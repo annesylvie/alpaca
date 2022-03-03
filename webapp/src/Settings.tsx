@@ -60,7 +60,7 @@ export function CustomPaces() {
   const [paces, setPaces] = useState<Array<IPace>>(savedPaces);
   const existingPaceNames = new Set(paces.map((pace) => pace.name));
 
-  Cookies.set("customPaces", JSON.stringify(paces), {expires: 365});
+  Cookies.set("customPaces", JSON.stringify(paces), {expires: 365, sameSite: "strict"});
 
   return (
     <div>
