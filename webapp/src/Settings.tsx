@@ -38,8 +38,10 @@ function CustomPaceBox(
   return (
     <div className="flex text-cream bg-blue-500 font-medium rounded-lg px-5 py-2.5 text-center my-2 justify-between content-center"
     >
-      <div className="font-semibold">{props.pace.name}</div>
-      <div>{props.pace.pace}</div>
+      <div className="flex grow items-center justify-items-start justify-between mr-4">
+        <div className="font-semibold">{props.pace.name}</div>
+        <div>{props.pace.pace}</div>
+      </div>
       <button type="button" onClick={() => {
         props.setPaces(prevPaces => (
           prevPaces.filter((pace) => pace.name !== props.pace.name)
