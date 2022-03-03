@@ -93,20 +93,19 @@ export function CustomPacesForm(
   };
 
   async function addCustomPaceCallback() {
-
     if (paceName === null || paceName.length === 0 || paceValue === null || paceValue.length === 0) {
       alert("The name or value of the custom pace should not be empty")
-
     }
     const newPace = {name: paceName!, pace: paceValue!} as IPace;
     if (newPace.name.length > 32) {
       alert("Maximum 32 characters. Please choose a shorter name.")
-
     }
     else if (props.existingPaceNames.has(newPace.name)) {
       alert("A custom pace with the same name already exists - please choose another name.");
     }
     else {
+      setPaceName("");
+      setPaceValue("");
       props.setPaces((paces) => [...paces, newPace]);
     }
   }
@@ -121,7 +120,7 @@ export function CustomPacesForm(
           setValue={setPaceName}
           disabled={false}
           placeholder="Name of your custom pace"
-          pattern={"^[\\w /:-.(),@]+$"}
+          pattern={"^[\\w /:\\-.(),@]+$"}
           tooltipContent="Valid characters for name are letters, numbers, and some basic punctuations. Max 32 characters."
         />
         <InputLine
