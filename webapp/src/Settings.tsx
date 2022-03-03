@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {InputLine, timeInputPattern} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
+import {paceTooltipText} from "./Utils/Tooltip";
 
 export function Settings() {
   return <div className="flex justify-center">
@@ -37,8 +38,10 @@ function CustomPaceBox(
   return (
     <div className="flex text-cream bg-blue-500 font-medium rounded-lg px-5 py-2.5 text-center my-2 justify-between content-center"
     >
-      <div className="font-semibold">{props.pace.name}</div>
-      <div>{props.pace.pace}</div>
+      <div className="flex grow items-center justify-items-start justify-between mr-4">
+        <div className="font-semibold">{props.pace.name}</div>
+        <div>{props.pace.pace}</div>
+      </div>
       <button type="button" onClick={() => {
         props.setPaces(prevPaces => (
           prevPaces.filter((pace) => pace.name !== props.pace.name)
@@ -57,7 +60,7 @@ export function CustomPaces() {
   const [paces, setPaces] = useState<Array<IPace>>(savedPaces);
   const existingPaceNames = new Set(paces.map((pace) => pace.name));
 
-  Cookies.set("customPaces", JSON.stringify(paces), {expires: 365});
+  Cookies.set("customPaces", JSON.stringify(paces), {expires: 365, sameSite: "strict"});
 
   return (
     <div>
@@ -92,20 +95,19 @@ export function CustomPacesForm(
   };
 
   async function addCustomPaceCallback() {
-
     if (paceName === null || paceName.length === 0 || paceValue === null || paceValue.length === 0) {
       alert("The name or value of the custom pace should not be empty")
-
     }
     const newPace = {name: paceName!, pace: paceValue!} as IPace;
     if (newPace.name.length > 32) {
       alert("Maximum 32 characters. Please choose a shorter name.")
-
     }
     else if (props.existingPaceNames.has(newPace.name)) {
       alert("A custom pace with the same name already exists - please choose another name.");
     }
     else {
+      setPaceName("");
+      setPaceValue("");
       props.setPaces((paces) => [...paces, newPace]);
     }
   }
@@ -120,7 +122,7 @@ export function CustomPacesForm(
           setValue={setPaceName}
           disabled={false}
           placeholder="Name of your custom pace"
-          pattern={"^[\\w /:-.(),@]+$"}
+          pattern={"^[\\w /:\\-.(),@]+$"}
           tooltipContent="Valid characters for name are letters, numbers, and some basic punctuations. Max 32 characters."
         />
         <InputLine
@@ -131,7 +133,7 @@ export function CustomPacesForm(
           disabled={false}
           placeholder="hh:mm:ss (per km)"
           pattern={timeInputPattern}
-          tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+          tooltipContent={paceTooltipText}
         />
         <SubmitButton />
       </form>

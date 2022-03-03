@@ -10,6 +10,7 @@ import {SelectorIcon} from '@heroicons/react/solid'
 import Cookies from 'js-cookie'
 import {getPace, getDistance, getDuration, hmsToSeconds} from "./Utils/Conversion";
 import {ISegment} from "./Utils/Interfaces";
+import {paceTooltipText} from "./Utils/Tooltip";
 import {InputLine, timeInputPattern, distanceInputPattern} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
 
@@ -81,7 +82,7 @@ function PaceDropdown(props: {
   }
   return (
     savedPaces.length > 0 ?
-      <div className="">
+      <div className="z-40">
         <Listbox value={selectedPace} onChange={handleChange}>
           <div className="relative mt-1">
             <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-blue-600 rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm">
@@ -146,7 +147,7 @@ function PaceInput(props: {
         disabled={props.disabled || isDropdownActive}
         placeholder="hh:mm:ss (per km)"
         pattern={props.pattern}
-        tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+        tooltipContent={paceTooltipText}
       />
       <PaceDropdown
         setPace={props.setPace}
@@ -257,7 +258,7 @@ function Convertor(props: {
           disabled={disableDuration}
           placeholder="hh:mm:ss"
           pattern={timeInputPattern}
-          tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+          tooltipContent={paceTooltipText}
         />
         <InputLine
           inputTitle="Distance"
