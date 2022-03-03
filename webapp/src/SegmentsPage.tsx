@@ -10,7 +10,7 @@ export function SegmentsPage() {
 
   return (
     <div className="flex justify-center">
-      <div className="m-4 p-4 w-3/5 max-w-lg">
+      <div className="m-4 p-4 w-4/5 max-w-lg">
         {segments.map((segment) => (
           <Segment
             distance={segment.distance}

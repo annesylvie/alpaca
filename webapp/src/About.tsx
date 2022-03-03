@@ -1,6 +1,6 @@
 export function About() {
   return <div className="flex justify-center">
-    <div className="bg-blue-700 w-3/5 max-w-lg rounded-lg mx-2 my-10 p-4 text-cream">
+    <div className="bg-blue-700 w-4/5 max-w-lg rounded-lg mx-2 my-10 p-4 text-cream">
       <div className="p-2">
         <div className="text-xl font-bold pb-6">
           About
