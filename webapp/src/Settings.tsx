@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import {InputLine, timeInputPattern} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
+import {paceTooltipText} from "./Utils/Tooltip";
 
 export function Settings() {
   return <div className="flex justify-center">
@@ -131,7 +132,7 @@ export function CustomPacesForm(
           disabled={false}
           placeholder="hh:mm:ss (per km)"
           pattern={timeInputPattern}
-          tooltipContent="Placeholder zeros can be omitted. For instance, 4 minutes 9 seconds can be entered as 4:9 instead of 00:04:09."
+          tooltipContent={paceTooltipText}
         />
         <SubmitButton />
       </form>

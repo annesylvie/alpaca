@@ -24,7 +24,7 @@ export function InputLine(props: {
           <div className="group pr-2">
             <p>
               <QuestionMarkCircleIcon className="h-4 w-4" aria-hidden="true" />
-              <span className="tooltip-text max-w-[13rem] bg-blue-500 text-sm rounded hidden group-hover:block absolute text-center py-2 px-6 z-50&quot;">
+              <span className="tooltip-text max-w-[13rem] bg-blue-500 text-sm rounded hidden group-hover:block absolute text-center py-2 px-6 z-50">
                 {props.tooltipContent}
               </span>
             </p>
