@@ -2,7 +2,7 @@
 A no-nonsense app to plan your runs
 
 ## What is it?
-This repository contains the source code for the webapp [Alpaca](https://alpaca-planner.vercel.app/), which is a tool to simplify the plannification of runs. It allows users to get an overview of the total distance and duration of a run, based on the time, distance and/or pace of different segments that get added up together.
+This repository contains the source code for the webapp [Alpaca](https://www.prepmy.run/), which is a tool to simplify the plannification of runs. It allows users to get an overview of the total distance and duration of a run, based on the time, distance and/or pace of different segments that get added up together.
 
 It's mostly a side-project that I created to learn Typescript and React.
 
