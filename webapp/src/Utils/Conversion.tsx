@@ -1,4 +1,4 @@
-import {ISegment} from "./Interfaces";
+import {SegmentData} from "./Interfaces";
 
 export enum Dimension {
   Distance = "Distance",
@@ -6,8 +6,8 @@ export enum Dimension {
   Pace = "Pace"
 }
 
-/// Functions to convert from basic numbers to a ISegment
-export function getDistance(pace: number, duration: number): ISegment {
+/// Functions to convert from basic numbers to a SegmentData
+export function getDistance(pace: number, duration: number): SegmentData {
   const speed = 1000 / pace;
   return {
     distance: speed * duration,
@@ -16,7 +16,7 @@ export function getDistance(pace: number, duration: number): ISegment {
   };
 }
 
-export function getDuration(pace: number, distanceInKm: number): ISegment {
+export function getDuration(pace: number, distanceInKm: number): SegmentData {
   const speed = 1000 / pace;
   const distance = distanceInKm * 1000;
   return {
@@ -29,7 +29,7 @@ export function getDuration(pace: number, distanceInKm: number): ISegment {
 export function getPace(
   distanceInKm: number,
   duration: number
-): ISegment {
+): SegmentData {
   const distance = distanceInKm * 1000;
   return {
     distance,
@@ -38,7 +38,7 @@ export function getPace(
   };
 }
 
-export function sumSegments(segments: Array<ISegment>): ISegment {
+export function sumSegments(segments: Array<SegmentData>): SegmentData {
   let totalDistance = 0;
   let totalDuration = 0;
   segments.forEach((segment) => {

@@ -9,7 +9,7 @@ import {Transition, Listbox} from '@headlessui/react'
 import {SelectorIcon} from '@heroicons/react/solid'
 import Cookies from 'js-cookie'
 import {getPace, getDistance, getDuration, hmsToSeconds} from "./Utils/Conversion";
-import {ISegment} from "./Utils/Interfaces";
+import {SegmentData} from "./Utils/Interfaces";
 import {paceTooltipText} from "./Utils/Tooltip";
 import {InputLine, timeInputPattern, distanceInputPattern} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
@@ -20,11 +20,11 @@ enum ConversionKind {
   ToDuration,
 }
 
-interface ISegmentFormProps {
-  setSegments: Dispatch<SetStateAction<Array<ISegment>>>;
+interface SegmentFormProps {
+  setSegments: Dispatch<SetStateAction<Array<SegmentData>>>;
 }
 
-export const SegmentForm: React.FC<ISegmentFormProps> = ({setSegments}: ISegmentFormProps) => {
+export const SegmentForm: React.FC<SegmentFormProps> = ({setSegments}: SegmentFormProps) => {
   const [step, setStep] = useState(0);
   return (
     <div>
@@ -162,7 +162,7 @@ function PaceInput(props: {
 
 
 function Convertor(props: {
-  setSegments: Dispatch<SetStateAction<Array<ISegment>>>;
+  setSegments: Dispatch<SetStateAction<Array<SegmentData>>>;
   setStep: Dispatch<SetStateAction<number>>;
 }) {
   const [pace, setPace] = useState<string | null>(null);
@@ -214,7 +214,7 @@ function Convertor(props: {
   }, [pace, duration, distance]);
 
   async function addSegmentCallback() {
-    let newSegment: ISegment;
+    let newSegment: SegmentData;
     let segmentDistance, segmentDuration, segmentPace;
     switch (conversionKind) {
       case ConversionKind.ToPace:
