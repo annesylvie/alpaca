@@ -5,9 +5,8 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-import {InputLine, timeInputPattern} from "./FormEntry";
+import {InputLine, InputPace} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
-import {paceTooltipText} from "./Utils/Tooltip";
 
 export function Settings() {
   return <div className="flex justify-center">
@@ -24,23 +23,25 @@ export function Settings() {
   </div>
 }
 
-interface IPace {
+interface SerializedPaceData {
   name: string,
-  pace: string
+  paceHigh: string,
+  paceLow: string,
 }
 
 function CustomPaceBox(
   props: {
-    pace: IPace;
-    setPaces: Dispatch<SetStateAction<Array<IPace>>>
+    pace: SerializedPaceData;
+    setPaces: Dispatch<SetStateAction<Array<SerializedPaceData>>>
   }
 ) {
+  let displayedPace = props.pace.paceHigh !== props.pace.paceLow ? `${props.pace.paceHigh} - ${props.pace.paceLow}` : `${props.pace.paceHigh}`;
   return (
     <div className="flex text-cream bg-blue-500 font-medium rounded-lg px-5 py-2.5 text-center my-2 justify-between content-center"
     >
       <div className="flex grow items-center justify-items-start justify-between mr-4">
         <div className="font-semibold">{props.pace.name}</div>
-        <div>{props.pace.pace}</div>
+        <div>{displayedPace}</div>
       </div>
       <button type="button" onClick={() => {
         props.setPaces(prevPaces => (
@@ -57,7 +58,7 @@ function CustomPaceBox(
 export function CustomPaces() {
   const rawPaces = Cookies.get("customPaces");
   const savedPaces = rawPaces === undefined ? [] : JSON.parse(rawPaces);
-  const [paces, setPaces] = useState<Array<IPace>>(savedPaces);
+  const [paces, setPaces] = useState<Array<SerializedPaceData>>(savedPaces);
   const existingPaceNames = new Set(paces.map((pace) => pace.name));
 
   Cookies.set("customPaces", JSON.stringify(paces), {expires: 365, sameSite: "strict"});
@@ -81,13 +82,15 @@ export function CustomPaces() {
 
 export function CustomPacesForm(
   props: {
-    setPaces: Dispatch<SetStateAction<Array<IPace>>>
+    setPaces: Dispatch<SetStateAction<Array<SerializedPaceData>>>
     existingPaceNames: Set<string>
   }
 ) {
   //const {onChange, onSubmit, customPace} = useForm(addCustomPaceCallback);
   const [paceName, setPaceName] = useState<string | null>(null);
-  const [paceValue, setPaceValue] = useState<string | null>(null);
+  const [paceValueHigh, setPaceValueHigh] = useState<string | null>(null);
+  const [paceValueLow, setPaceValueLow] = useState<string | null>(null);
+  const [inputPaceAsRange, setInputPaceAsRange] = useState(false);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -95,10 +98,10 @@ export function CustomPacesForm(
   };
 
   async function addCustomPaceCallback() {
-    if (paceName === null || paceName.length === 0 || paceValue === null || paceValue.length === 0) {
+    if (paceName === null || paceName.length === 0 || paceValueHigh === null || paceValueHigh.length === 0) {
       alert("The name or value of the custom pace should not be empty")
     }
-    const newPace = {name: paceName!, pace: paceValue!} as IPace;
+    const newPace = {name: paceName!, paceHigh: paceValueHigh!, paceLow: paceValueLow === null || paceValueLow === "" ? paceValueHigh : paceValueLow} as SerializedPaceData;
     if (newPace.name.length > 32) {
       alert("Maximum 32 characters. Please choose a shorter name.")
     }
@@ -107,7 +110,8 @@ export function CustomPacesForm(
     }
     else {
       setPaceName("");
-      setPaceValue("");
+      setPaceValueHigh("");
+      setPaceValueLow("");
       props.setPaces((paces) => [...paces, newPace]);
     }
   }
@@ -125,15 +129,14 @@ export function CustomPacesForm(
           pattern={"^[\\w /:\\-.(),@]+$"}
           tooltipContent="Valid characters for name are letters, numbers, and some basic punctuations. Max 32 characters."
         />
-        <InputLine
-          value={paceValue === null ? undefined : paceValue}
-          inputTitle="Pace"
-          inputName="pace"
-          setValue={setPaceValue}
+        <InputPace
+          paceHigh={paceValueHigh}
+          setPaceHigh={setPaceValueHigh}
+          paceLow={paceValueLow}
+          setPaceLow={setPaceValueLow}
+          inputPaceAsRange={inputPaceAsRange}
+          setInputPaceAsRange={setInputPaceAsRange}
           disabled={false}
-          placeholder="hh:mm:ss (per km)"
-          pattern={timeInputPattern}
-          tooltipContent={paceTooltipText}
         />
         <SubmitButton />
       </form>

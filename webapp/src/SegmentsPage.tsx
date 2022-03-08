@@ -13,16 +13,12 @@ export function SegmentsPage() {
       <div className="m-4 p-4 w-4/5 max-w-lg">
         {segments.map((segment) => (
           <Segment
-            distance={segment.distance}
-            duration={segment.duration}
-            speed={segment.speed}
+            data={segment}
             isTally={false}
           />
         ))}
         <Segment
-          distance={tally.distance}
-          duration={tally.duration}
-          speed={tally.speed}
+          data={tally}
           isTally={true}
         />
         <SegmentForm setSegments={setSegments} />

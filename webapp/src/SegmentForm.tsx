@@ -11,7 +11,7 @@ import Cookies from 'js-cookie'
 import {getPace, getDistance, getDuration, hmsToSeconds} from "./Utils/Conversion";
 import {SegmentData} from "./Utils/Interfaces";
 import {paceTooltipText} from "./Utils/Tooltip";
-import {InputLine, timeInputPattern, distanceInputPattern} from "./FormEntry";
+import {InputLine, InputPace, timeInputPattern, distanceInputPattern} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
 
 enum ConversionKind {
@@ -61,23 +61,28 @@ function isSet(value: string | null): boolean {
 
 
 function PaceDropdown(props: {
-  setPace: Dispatch<SetStateAction<string | null>>,
+  setPaceHigh: Dispatch<SetStateAction<string | null>>,
+  setPaceLow: Dispatch<SetStateAction<string | null>>,
   setIsDropdownActive: Dispatch<SetStateAction<boolean>>
+  setInputPaceAsRange: Dispatch<SetStateAction<boolean>>
   disabled: boolean,
 }) {
   const rawPaces = Cookies.get("customPaces");
   const savedPaces = rawPaces === undefined ? [] : JSON.parse(rawPaces);
+  console.log(rawPaces);
   const [selectedPace, setSelectedPace] = useState<
-    {name: string, pace: string | null}
+    {name: string, paceHigh: string | null, paceLow: string | null}
   >({
-    pace: null, name: "Custom Paces"
+    paceHigh: null, paceLow: null, name: "Custom Paces"
   });
 
-  const handleChange = (value: {pace: string | null, name: string}) => {
+  const handleChange = (value: {paceHigh: string | null, paceLow: string | null, name: string}) => {
     setSelectedPace(value);
-    if (value.pace !== null) {
-      props.setPace(value.pace);
+    if (value.paceHigh !== null) {
+      props.setPaceHigh(value.paceHigh);
+      props.setPaceLow(value.paceLow);
       props.setIsDropdownActive(true);
+      props.setInputPaceAsRange(value.paceHigh !== value.paceLow);
     }
   }
   return (
@@ -131,27 +136,33 @@ function PaceDropdown(props: {
 
 
 function PaceInput(props: {
-  pace: string | null,
-  setPace: Dispatch<SetStateAction<string | null>>,
+  paceHigh: string | null,
+  setPaceHigh: Dispatch<SetStateAction<string | null>>,
+  paceLow: string | null,
+  setPaceLow: Dispatch<SetStateAction<string | null>>,
   disabled: boolean,
-  pattern: string,
 }) {
   const [isDropdownActive, setIsDropdownActive] = useState(false);
+  // When paceHigh and paceLow are both not null and different: set as range
+  const [inputPaceAsRange, setInputPaceAsRange] = useState(
+    props.paceHigh !== null && props.paceLow !== null && props.paceHigh === props.paceLow
+  );
   return (
     <>
-      <InputLine
-        value={props.pace === null ? undefined : props.pace}
-        setValue={props.setPace}
-        inputTitle="Pace"
-        inputName="pace"
+      <InputPace
+        paceHigh={props.paceHigh}
+        setPaceHigh={props.setPaceHigh}
+        paceLow={props.paceLow}
+        setPaceLow={props.setPaceLow}
+        inputPaceAsRange={inputPaceAsRange}
+        setInputPaceAsRange={setInputPaceAsRange}
         disabled={props.disabled || isDropdownActive}
-        placeholder="hh:mm:ss (per km)"
-        pattern={props.pattern}
-        tooltipContent={paceTooltipText}
       />
       <PaceDropdown
-        setPace={props.setPace}
+        setPaceHigh={props.setPaceHigh}
+        setPaceLow={props.setPaceLow}
         setIsDropdownActive={setIsDropdownActive}
+        setInputPaceAsRange={setInputPaceAsRange}
         disabled={props.disabled}
       />
     </>
@@ -159,13 +170,12 @@ function PaceInput(props: {
 }
 
 
-
-
 function Convertor(props: {
   setSegments: Dispatch<SetStateAction<Array<SegmentData>>>;
   setStep: Dispatch<SetStateAction<number>>;
 }) {
-  const [pace, setPace] = useState<string | null>(null);
+  const [paceHigh, setPaceHigh] = useState<string | null>(null);
+  const [paceLow, setPaceLow] = useState<string | null>(null);
   const [disablePace, setDisablePace] = useState(false);
   const [duration, setDuration] = useState<string | null>(null);
   const [disableDuration, setDisableDuration] = useState(false);
@@ -179,7 +189,7 @@ function Convertor(props: {
 
   useEffect(() => {
     if (
-      isSet(pace) && isSet(duration) && isSet(distance)
+      (isSet(paceHigh) || isSet(paceLow)) && isSet(duration) && isSet(distance)
     ) {
       console.log("Error, defaulting to converting to distance");
       setDisablePace(false);
@@ -187,13 +197,13 @@ function Convertor(props: {
       setDisableDuration(false);
       setConversionKind(ConversionKind.ToDistance);
     }
-    else if (isSet(pace) && isSet(distance)) {
+    else if ((isSet(paceHigh) || isSet(paceLow)) && isSet(distance)) {
       setDisablePace(false);
       setDisableDistance(false);
       setDisableDuration(true);
       setConversionKind(ConversionKind.ToDuration);
     }
-    else if (isSet(pace) && isSet(duration)) {
+    else if ((isSet(paceHigh) || isSet(paceLow)) && isSet(duration)) {
       setDisablePace(false);
       setDisableDistance(true);
       setDisableDuration(false);
@@ -211,11 +221,11 @@ function Convertor(props: {
       setDisableDuration(false);
       setConversionKind(null);
     }
-  }, [pace, duration, distance]);
+  }, [paceHigh, paceLow, duration, distance]);
 
   async function addSegmentCallback() {
     let newSegment: SegmentData;
-    let segmentDistance, segmentDuration, segmentPace;
+    let segmentDistance, segmentDuration, segmentPaceHigh, segmentPaceLow, segmentPaceRange;
     switch (conversionKind) {
       case ConversionKind.ToPace:
         segmentDistance = distance === null ? 0 : parseFloat(distance);
@@ -224,13 +234,17 @@ function Convertor(props: {
         break;
       case ConversionKind.ToDuration:
         segmentDistance = distance === null ? 0 : parseFloat(distance);
-        segmentPace = pace === null ? 0 : hmsToSeconds(pace);
-        newSegment = getDuration(segmentPace, segmentDistance);
+        segmentPaceHigh = paceHigh === null ? 0 : hmsToSeconds(paceHigh);
+        segmentPaceLow = (paceLow === null || paceLow === "") ? segmentPaceHigh : hmsToSeconds(paceLow);
+        segmentPaceRange = {high: segmentPaceHigh, low: segmentPaceLow}
+        newSegment = getDuration(segmentPaceRange, segmentDistance);
         break;
       case ConversionKind.ToDistance:
         segmentDuration = duration === null ? 0 : hmsToSeconds(duration);
-        segmentPace = pace === null ? 0 : hmsToSeconds(pace);
-        newSegment = getDistance(segmentPace, segmentDuration);
+        segmentPaceHigh = paceHigh === null ? 0 : hmsToSeconds(paceHigh);
+        segmentPaceLow = (paceLow === null || paceLow === "") ? segmentPaceHigh : hmsToSeconds(paceLow);
+        segmentPaceRange = {high: segmentPaceHigh, low: segmentPaceLow}
+        newSegment = getDistance(segmentPaceRange, segmentDuration);
         break;
       case null:
         throw new Error(`This state should be unreachable: ${conversionKind} `);
@@ -246,10 +260,11 @@ function Convertor(props: {
         className="bg-blue-700 rounded px-8 py-6 mb-4 text-cream"
       >
         <PaceInput
-          pace={pace}
-          setPace={setPace}
+          paceHigh={paceHigh}
+          setPaceHigh={setPaceHigh}
+          paceLow={paceLow}
+          setPaceLow={setPaceLow}
           disabled={disablePace}
-          pattern={timeInputPattern}
         />
         <InputLine
           inputTitle="Duration"

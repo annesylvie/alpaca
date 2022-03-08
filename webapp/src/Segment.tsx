@@ -1,22 +1,19 @@
 import React from "react";
-import {displayNumber, displayDuration, displayPace} from "./Utils/Display";
+import {displayDistance, displayDuration, displayPace} from "./Utils/Display";
 import {Dimension} from "./Utils/Conversion";
+import {SegmentData, Range} from "./Utils/Interfaces";
 import {ReactComponent as StopwatchIcon} from './Assets/stopwatch.svg';
 import {ReactComponent as PathIcon} from './Assets/path-2.svg';
 import {ReactComponent as ShoeIcon} from './Assets/shoe.svg';
 
 
 export interface SegmentProps {
-  distance: number; // In meters
-  duration: number; // In seconds
-  speed: number; // In meters per second
+  data: SegmentData;
   isTally: boolean;
 }
 
 export const Segment: React.FC<SegmentProps> = ({
-  distance,
-  duration,
-  speed,
+  data,
   isTally,
 }: SegmentProps) => {
   let backgroundColor, textColor, svgColor;
@@ -37,21 +34,36 @@ export const Segment: React.FC<SegmentProps> = ({
       <SegmentLine
         svgColor={svgColor}
         dimension={Dimension.Distance}
-        segmentValue={`${displayNumber(distance / 1000)}km`}
+        range={{
+          high: data.distance.high / 1000,
+          low: data.distance.low / 1000,
+        }}
       />
       <SegmentLine
         svgColor={svgColor}
         dimension={Dimension.Duration}
-        segmentValue={`${displayDuration(duration)}`}
+        range={data.duration}
       />
       <SegmentLine
         svgColor={svgColor}
         dimension={Dimension.Pace}
-        segmentValue={`${displayPace(1000 / speed)}`}
+        range={{
+          // Invert values: high speed is low pace and inversely
+          high: 1000 / data.speed.low,
+          low: 1000 / data.speed.high,
+        }}
       />
     </div>
   );
 };
+
+function rangeToString(range: Range, dimension: Dimension): string {
+  let format = segmentDataFormatMap[dimension]
+  if (range.low === range.high || isNaN(range.low) || isNaN(range.high)) {
+    return format(range.low)
+  }
+  return `${format(range.low)}-${format(range.high)}`
+}
 
 
 const iconMap: Record<Dimension, JSX.Element> = {
@@ -60,10 +72,16 @@ const iconMap: Record<Dimension, JSX.Element> = {
   [Dimension.Pace]: <ShoeIcon />,
 };
 
+const segmentDataFormatMap: Record<Dimension, CallableFunction> = {
+  [Dimension.Distance]: displayDistance,
+  [Dimension.Duration]: displayDuration,
+  [Dimension.Pace]: displayPace,
+};
+
 export function SegmentLine(props: {
   svgColor: string,
   dimension: Dimension,
-  segmentValue: string
+  range: Range
 }) {
   let svgClassName = `${props.svgColor} h-6 w-6 mr-4`;
   let icon = <div className={svgClassName}>{iconMap[props.dimension]}</div>;
@@ -72,7 +90,7 @@ export function SegmentLine(props: {
       {icon}
       <div className="flex grow items-center">
         <div className="grow font-semibold">{props.dimension}</div>
-        <div>{props.segmentValue}</div>
+        <div>{rangeToString(props.range, props.dimension)}</div>
       </div>
     </div>
   )
