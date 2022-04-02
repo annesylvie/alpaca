@@ -1,4 +1,4 @@
-import {ISegment} from "./Interfaces";
+import {SegmentData, Range} from "./Interfaces";
 
 export enum Dimension {
   Distance = "Distance",
@@ -6,49 +6,59 @@ export enum Dimension {
   Pace = "Pace"
 }
 
-/// Functions to convert from basic numbers to a ISegment
-export function getDistance(pace: number, duration: number): ISegment {
-  const speed = 1000 / pace;
+/// Functions to convert from basic numbers to a SegmentData
+export function getDistance(pace: Range, duration: number): SegmentData {
+  const lowSpeed = 1000 / pace.low;
+  const highSpeed = 1000 / pace.high;
   return {
-    distance: speed * duration,
-    duration,
-    speed,
+    distance: {high: highSpeed * duration, low: lowSpeed * duration},
+    duration: {high: duration, low: duration},
+    speed: {high: highSpeed, low: lowSpeed},
   };
 }
 
-export function getDuration(pace: number, distanceInKm: number): ISegment {
-  const speed = 1000 / pace;
+export function getDuration(pace: Range, distanceInKm: number): SegmentData {
+  const lowSpeed = 1000 / pace.low;
+  const highSpeed = 1000 / pace.high;
   const distance = distanceInKm * 1000;
   return {
-    distance,
-    duration: distance / speed,
-    speed,
+    distance: {high: distance, low: distance},
+    // Lower speed means longer duration to cover the same distance
+    duration: {
+      high: distance / lowSpeed, low: distance / highSpeed
+    },
+    speed: {high: highSpeed, low: lowSpeed},
   };
 }
 
 export function getPace(
   distanceInKm: number,
   duration: number
-): ISegment {
+): SegmentData {
   const distance = distanceInKm * 1000;
   return {
-    distance,
-    duration,
-    speed: distance / duration,
+    distance: {high: distance, low: distance},
+    duration: {high: duration, low: duration},
+    speed: {high: distance / duration, low: distance / duration},
   };
 }
 
-export function sumSegments(segments: Array<ISegment>): ISegment {
-  let totalDistance = 0;
-  let totalDuration = 0;
+export function sumSegments(segments: Array<SegmentData>): SegmentData {
+  let totalDuration = {high: 0, low: 0};
+  let totalDistance = {high: 0, low: 0};
   segments.forEach((segment) => {
-    totalDuration += segment.duration;
-    totalDistance += segment.distance;
+    totalDuration.high += segment.duration.high;
+    totalDuration.low += segment.duration.low;
+    totalDistance.high += segment.distance.high;
+    totalDistance.low += segment.distance.low;
   });
   return {
     duration: totalDuration,
     distance: totalDistance,
-    speed: totalDistance / totalDuration,
+    speed: {
+      high: totalDistance.high / totalDuration.low,
+      low: totalDistance.low / totalDuration.high
+    },
   };
 }
 

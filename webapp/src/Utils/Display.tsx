@@ -1,4 +1,3 @@
-
 export function displayNumber(numberToDisplay: number): string {
   return Number.isFinite(numberToDisplay) ? numberToDisplay.toFixed(2) : "—";
 }
@@ -23,4 +22,8 @@ export function displayPace(seconds: number): string {
 
 export function displayDuration(seconds: number): string {
   return secondsToHMSString(seconds);
+}
+
+export function displayDistance(km: number): string {
+  return `${displayNumber(km)}km`
 }
