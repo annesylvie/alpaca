@@ -1,5 +1,4 @@
 import {TrashIcon} from '@heroicons/react/solid'
-import Cookies from 'js-cookie'
 import React, {
   useState,
   Dispatch,
@@ -7,6 +6,7 @@ import React, {
 } from "react";
 import {InputLine, InputPace} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
+import {useAndUpdateCookie} from "./Utils/Cookie";
 
 export function Settings() {
   return <div className="flex justify-center">
@@ -56,12 +56,8 @@ function CustomPaceBox(
 }
 
 export function CustomPaces() {
-  const rawPaces = Cookies.get("customPaces");
-  const savedPaces = rawPaces === undefined ? [] : JSON.parse(rawPaces);
-  const [paces, setPaces] = useState<Array<SerializedPaceData>>(savedPaces);
+  const [paces, setPaces] = useAndUpdateCookie<SerializedPaceData>({cookieKey: "customPaces"});
   const existingPaceNames = new Set(paces.map((pace) => pace.name));
-
-  Cookies.set("customPaces", JSON.stringify(paces), {expires: 365, sameSite: "strict"});
 
   return (
     <div>

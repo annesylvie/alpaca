@@ -1,11 +1,12 @@
-import {useState, useMemo} from "react";
+import {useMemo} from "react";
 import {Segment} from "./Segment";
 import {SegmentData} from "./Utils/Interfaces";
 import {sumSegments} from "./Utils/Conversion";
+import {useAndUpdateCookie} from "./Utils/Cookie";
 import {SegmentForm} from "./SegmentForm";
 
 export function SegmentsPage() {
-  const [segments, setSegments] = useState<Array<SegmentData>>([]);
+  const [segments, setSegments] = useAndUpdateCookie<SegmentData>({cookieKey: "segmentsOnMainPage"});
   const tally = useMemo(() => sumSegments(segments), [segments]);
 
   return (
