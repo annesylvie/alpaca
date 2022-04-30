@@ -12,7 +12,7 @@ import {getPace, getDistance, getDuration, hmsToSeconds} from "./Utils/Conversio
 import {SegmentData} from "./Utils/Interfaces";
 import {paceTooltipText} from "./Utils/Tooltip";
 import {InputLine, InputPace, timeInputPattern, distanceInputPattern} from "./FormEntry";
-import {SubmitButton} from "./Utils/Button";
+import {SubmitButton, BackButton, AddNewButton, ClearAllButton} from "./Utils/Button";
 
 enum ConversionKind {
   ToPace,
@@ -29,7 +29,10 @@ export const SegmentForm: React.FC<SegmentFormProps> = ({setSegments}: SegmentFo
   return (
     <div>
       {step === 0 ? (
-        <AddNewButton setStep={setStep} />
+        <div className="flex items-center justify-between px-8">
+          <ClearAllButton setSegments={setSegments} />
+          <AddNewButton setStep={setStep} />
+        </div>
       ) : (
         <Convertor setStep={setStep} setSegments={setSegments} />
       )
@@ -38,21 +41,6 @@ export const SegmentForm: React.FC<SegmentFormProps> = ({setSegments}: SegmentFo
   );
 };
 
-function AddNewButton(props: {
-  setStep: Dispatch<SetStateAction<number>>;
-}) {
-  return (
-    <div className="flex justify-center">
-      <button
-        type="submit"
-        className="text-cream bg-blue-600 font-medium rounded-lg text-center px-5 py-2.5 my-2"
-        onClick={() => props.setStep(1)}
-      >
-        Add New
-      </button>
-    </div>
-  );
-}
 
 
 function isSet(value: string | null): boolean {
@@ -285,15 +273,8 @@ function Convertor(props: {
           tooltipContent="Distance in kilometers, e.g. 4 or 1.2"
         />
         <div className="flex items-center justify-between">
+          <BackButton setStep={props.setStep} />
           <SubmitButton />
-          <button
-            className="text-cream bg-blue-500 font-medium rounded-lg px-5 py-2.5 text-center my-2"
-            onClick={() => {
-              props.setStep(0);
-            }}
-          >
-            Back
-          </button>
         </div>
       </form>
     </div>
