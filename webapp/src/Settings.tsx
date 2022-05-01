@@ -134,7 +134,9 @@ export function CustomPacesForm(
           setInputPaceAsRange={setInputPaceAsRange}
           disabled={false}
         />
-        <SubmitButton />
+        <div className="flex justify-end">
+          <SubmitButton />
+        </div>
       </form>
     </div>
   );
