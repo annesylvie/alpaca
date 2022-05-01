@@ -6,15 +6,15 @@ import React, {
 } from "react";
 import {InputLine, InputPace} from "./FormEntry";
 import {SubmitButton} from "./Utils/Button";
+import {SectionHeading} from "./Utils/SectionHeading";
 import {useAndUpdateCookie} from "./Utils/Cookie";
+
 
 export function Settings() {
   return <div className="flex justify-center">
     <div className="bg-blue-700 w-4/5 max-w-lg rounded-lg mx-2 my-10 p-4 text-cream">
       <div className="p-2">
-        <div className="text-xl font-bold pb-6">
-          Settings
-        </div>
+        <SectionHeading sectionName='Settings' />
         <div className="pb-4">
           <CustomPaces />
         </div>

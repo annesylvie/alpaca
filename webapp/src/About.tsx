@@ -1,10 +1,10 @@
+import {SectionHeading} from "./Utils/SectionHeading";
+
 export function About() {
   return <div className="flex justify-center">
     <div className="bg-blue-700 w-4/5 max-w-lg rounded-lg mx-2 my-10 p-4 text-cream">
       <div className="p-2">
-        <div className="text-xl font-bold pb-6">
-          About
-        </div>
+        <SectionHeading sectionName='About' />
         <div className="pb-4">
           This app is meant to help people easily plan their runs.
         </div>
