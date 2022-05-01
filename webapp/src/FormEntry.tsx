@@ -3,8 +3,9 @@ import {QuestionMarkCircleIcon} from '@heroicons/react/solid';
 import {classNames} from "./Utils/Css";
 import {Switch} from '@headlessui/react'
 import {paceTooltipText} from "./Utils/Tooltip";
+import {colonBasedTimeInputPattern, wordBasedTimeInputPattern} from "./Utils/Conversion";
 
-export let timeInputPattern = "^\\d*:?\\d*:?\\d+$";
+export let timeInputPattern = `(?:${colonBasedTimeInputPattern})|(?:${wordBasedTimeInputPattern})`;
 export let distanceInputPattern = "\\d+.?\\d*";
 
 

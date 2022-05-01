@@ -1,5 +1,10 @@
 import {SegmentData, Range} from "./Interfaces";
 
+export let colonBasedTimeInputPattern = `^\\d*:?\\d*:?\\d+$`;
+export let wordBasedTimeInputPattern = `^(?:(?<hours>\\d+)h)?(?:(?<minutes>\\d+)min)?(?:(?<seconds>\\d+)s)?$`;
+const wordBasedTimeInputRegex = new RegExp(wordBasedTimeInputPattern);
+const colonBasedTimeInputRegex = new RegExp(colonBasedTimeInputPattern);
+
 export enum Dimension {
   Distance = "Distance",
   Duration = "Duration",
@@ -62,8 +67,7 @@ export function sumSegments(segments: Array<SegmentData>): SegmentData {
   };
 }
 
-
-export function hmsToSeconds(input: string): number {
+function hmsColonBasedToSeconds(input: string): number {
   let hmsSplit = input.split(':');
   let seconds = 0;
   let minutes = 1;
@@ -77,4 +81,15 @@ export function hmsToSeconds(input: string): number {
   }
 
   return seconds;
+}
+
+function hmsWordBasedToSeconds(input: string): number {
+  const match = wordBasedTimeInputRegex.exec(input);
+  return parseInt(match?.groups?.hours || "0", 10) * 3600
+    + parseInt(match?.groups?.minutes || "0", 10) * 60
+    + parseInt(match?.groups?.seconds || "0", 10);
+}
+
+export function hmsToSeconds(input: string): number {
+  return colonBasedTimeInputRegex.test(input) ? hmsColonBasedToSeconds(input) : hmsWordBasedToSeconds(input);
 }
