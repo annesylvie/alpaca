@@ -60,9 +60,9 @@ export const Segment: React.FC<SegmentProps> = ({
 function rangeToString(range: Range, dimension: Dimension): string {
   let format = segmentDataFormatMap[dimension]
   if (range.low === range.high || isNaN(range.low) || isNaN(range.high)) {
-    return format(range.low)
+    return format(range.low, true)
   }
-  return `${format(range.low)}-${format(range.high)}`
+  return `${format(range.low, false)}-${format(range.high, true)}`
 }
 
 
