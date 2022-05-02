@@ -57,7 +57,6 @@ function PaceDropdown(props: {
 }) {
   const rawPaces = Cookies.get("customPaces");
   const savedPaces = rawPaces === undefined ? [] : JSON.parse(rawPaces);
-  console.log(rawPaces);
   const [selectedPace, setSelectedPace] = useState<
     {name: string, paceHigh: string | null, paceLow: string | null}
   >({
