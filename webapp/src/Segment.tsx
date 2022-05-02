@@ -1,6 +1,7 @@
 import React from "react";
 import {displayDistance, displayDuration, displayPace} from "./Utils/Display";
 import {Dimension} from "./Utils/Conversion";
+import {classNames} from "./Utils/Css";
 import {SegmentData, Range} from "./Utils/Interfaces";
 import {ReactComponent as StopwatchIcon} from './Assets/stopwatch.svg';
 import {ReactComponent as PathIcon} from './Assets/path-2.svg';
@@ -11,6 +12,7 @@ export interface SegmentProps {
   data: SegmentData;
   isTally: boolean;
 }
+
 
 export const Segment: React.FC<SegmentProps> = ({
   data,
@@ -30,32 +32,45 @@ export const Segment: React.FC<SegmentProps> = ({
     <div
       className={`${textColor} ${backgroundColor} font-medium rounded-lg  my-2 p-4`}
     >
-      {isTally ? <div className="mb-1">Total</div> : null}
-      <SegmentLine
-        svgColor={svgColor}
-        dimension={Dimension.Distance}
-        range={{
-          high: data.distance.high / 1000,
-          low: data.distance.low / 1000,
-        }}
-      />
-      <SegmentLine
-        svgColor={svgColor}
-        dimension={Dimension.Duration}
-        range={data.duration}
-      />
-      <SegmentLine
-        svgColor={svgColor}
-        dimension={Dimension.Pace}
-        range={{
-          // Invert values: high speed is low pace and inversely
-          high: 1000 / data.speed.low,
-          low: 1000 / data.speed.high,
-        }}
-      />
+      <div className="grid grid-cols-12 gap-1">
+        <SegmentTitle isTally={isTally} repeat={data.repeat} />
+        <SegmentLine
+          svgColor={svgColor}
+          dimension={Dimension.Distance}
+          range={{
+            high: data.distance.high / 1000,
+            low: data.distance.low / 1000,
+          }}
+          repeat={data.repeat}
+        />
+        <SegmentLine
+          svgColor={svgColor}
+          dimension={Dimension.Duration}
+          range={data.duration}
+          repeat={data.repeat}
+        />
+        <SegmentLine
+          svgColor={svgColor}
+          dimension={Dimension.Pace}
+          range={{
+            // Invert values: high speed is low pace and inversely
+            high: 1000 / data.speed.low,
+            low: 1000 / data.speed.high,
+          }}
+          repeat={1}
+        />
+      </div>
     </div>
   );
 };
+
+function repeatRange(range: Range, repeat: number): Range {
+  return {
+    high: range.high * repeat,
+    low: range.low * repeat,
+  }
+}
+
 
 function rangeToString(range: Range, dimension: Dimension): string {
   let format = segmentDataFormatMap[dimension]
@@ -81,17 +96,79 @@ const segmentDataFormatMap: Record<Dimension, CallableFunction> = {
 export function SegmentLine(props: {
   svgColor: string,
   dimension: Dimension,
-  range: Range
+  range: Range,
+  repeat: number
 }) {
-  let svgClassName = `${props.svgColor} h-6 w-6 mr-4`;
-  let icon = <div className={svgClassName}>{iconMap[props.dimension]}</div>;
+  return props.repeat > 1
+    ? <SegmentLineWithRepeats
+      svgColor={props.svgColor}
+      dimension={props.dimension}
+      range={props.range}
+      repeat={props.repeat}
+    />
+    : <SegmentLineWithoutRepeats
+      svgColor={props.svgColor}
+      dimension={props.dimension}
+      range={props.range}
+    />;
+}
+
+function SegmentLineWithoutRepeats(props: {
+  svgColor: string,
+  dimension: Dimension,
+  range: Range,
+}) {
   return (
-    <div className="flex items-center my-2">
-      {icon}
-      <div className="flex grow items-center">
-        <div className="grow font-semibold">{props.dimension}</div>
-        <div>{rangeToString(props.range, props.dimension)}</div>
+    <>
+      <div className={classNames(
+        `${props.svgColor}`,
+        "h-6 w-6 col-span-1 pr-1"
+      )}>{iconMap[props.dimension]}</div>
+      <div className="col-span-3">
+        {props.dimension}
       </div>
-    </div>
+      <div className="col-span-8 justify-self-end">
+        {rangeToString(props.range, props.dimension)}
+      </div>
+    </>
   )
+}
+
+function SegmentLineWithRepeats(props: {
+  svgColor: string,
+  dimension: Dimension,
+  range: Range,
+  repeat: number
+}) {
+  return (
+    <>
+      <div className={classNames(
+        `${props.svgColor}`,
+        "h-6 w-6 col-span-1 pr-1"
+      )}>{iconMap[props.dimension]}</div>
+      <div className="col-span-3">
+        {props.dimension}
+      </div>
+      <div className="col-span-4 justify-self-end">
+        {rangeToString(props.range, props.dimension)}
+      </div>
+      <div className="col-span-4 justify-self-end">
+        {rangeToString(repeatRange(props.range, props.repeat), props.dimension)}
+      </div>
+    </>
+  )
+}
+
+function SegmentTitle(props: {
+  isTally: boolean,
+  repeat: number
+}) {
+  return (props.isTally
+    ? <div className="col-span-12">Total</div>
+    : props.repeat > 1
+      ? <>
+        <div className="col-start-5 col-span-4 justify-self-end">{"x1"}</div>
+        <div className="col-start-9 col-span-4 justify-self-end">{`x${props.repeat}`}</div>
+      </>
+      : null)
 }

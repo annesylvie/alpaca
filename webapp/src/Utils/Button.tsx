@@ -1,5 +1,7 @@
-import React, {Dispatch, SetStateAction, } from "react";
+import {MinusSmIcon, PlusSmIcon} from '@heroicons/react/solid'
+import {Dispatch, SetStateAction, } from "react";
 import {SegmentData} from "./Interfaces";
+import {classNames} from "./Css";
 
 export function SubmitButton() {
   return <button
@@ -57,3 +59,24 @@ export function ClearAllButton(props: {
   );
 }
 
+
+export function IncrementButton(props: {
+  data: number,
+  setData: Dispatch<SetStateAction<number>>
+  incrementValue: number,
+  disabled: boolean
+}) {
+  return <button
+    type="button"
+    className={classNames(
+      props.disabled ? "bg-blue-600 opacity 30" : "bg-blue-500",
+      "text-cream font-medium rounded-lg px-2 text-center py-1 mx-0.5")}
+    onClick={() => {props.setData(props.data + props.incrementValue)}}
+    disabled={props.disabled}
+  >
+    {props.incrementValue > 0
+      ? <PlusSmIcon className="h-4 w-4 text-cream" aria-hidden="true" />
+      : <MinusSmIcon className="h-4 w-4 text-cream" aria-hidden="true" />
+    }
+  </button >
+}
