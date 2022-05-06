@@ -12,7 +12,7 @@ import {getPace, getDistance, getDuration, hmsToSeconds} from "./Utils/Conversio
 import {SegmentData} from "./Utils/Interfaces";
 import {paceTooltipText} from "./Utils/Tooltip";
 import {InputLine, InputPace, timeInputPattern, distanceInputPattern} from "./FormEntry";
-import {SubmitButton, BackButton, AddNewButton, ClearAllButton} from "./Utils/Button";
+import {IncrementButton, SubmitButton, BackButton, AddNewButton, ClearAllButton} from "./Utils/Button";
 
 enum ConversionKind {
   ToPace,
@@ -156,6 +156,28 @@ function PaceInput(props: {
   )
 }
 
+function RepetitionCounter(props: {
+  repeat: number,
+  setRepeat: Dispatch<SetStateAction<number>>
+}) {
+  return <div className="flex items-center py-3">
+    <span className="pr-2">
+      {`Repetitions: ${props.repeat}`}
+    </span>
+    <IncrementButton
+      data={props.repeat}
+      setData={props.setRepeat}
+      incrementValue={-1}
+      disabled={props.repeat <= 1}
+    />
+    <IncrementButton
+      data={props.repeat}
+      setData={props.setRepeat}
+      incrementValue={1}
+      disabled={props.repeat >= 50}
+    />
+  </div>
+}
 
 function Convertor(props: {
   setSegments: Dispatch<SetStateAction<Array<SegmentData>>>;
@@ -169,6 +191,7 @@ function Convertor(props: {
   const [distance, setDistance] = useState<string | null>(null);
   const [disableDistance, setDisableDistance] = useState(false);
   const [conversionKind, setConversionKind] = useState<ConversionKind | null>(null);
+  const [repeat, setRepeat] = useState<number>(1);
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await addSegmentCallback();
@@ -217,21 +240,21 @@ function Convertor(props: {
       case ConversionKind.ToPace:
         segmentDistance = distance === null ? 0 : parseFloat(distance);
         segmentDuration = duration === null ? 0 : hmsToSeconds(duration);
-        newSegment = getPace(segmentDistance, segmentDuration);
+        newSegment = getPace(segmentDistance, segmentDuration, repeat);
         break;
       case ConversionKind.ToDuration:
         segmentDistance = distance === null ? 0 : parseFloat(distance);
         segmentPaceHigh = paceHigh === null ? 0 : hmsToSeconds(paceHigh);
         segmentPaceLow = (paceLow === null || paceLow === "") ? segmentPaceHigh : hmsToSeconds(paceLow);
         segmentPaceRange = {high: segmentPaceHigh, low: segmentPaceLow}
-        newSegment = getDuration(segmentPaceRange, segmentDistance);
+        newSegment = getDuration(segmentPaceRange, segmentDistance, repeat);
         break;
       case ConversionKind.ToDistance:
         segmentDuration = duration === null ? 0 : hmsToSeconds(duration);
         segmentPaceHigh = paceHigh === null ? 0 : hmsToSeconds(paceHigh);
         segmentPaceLow = (paceLow === null || paceLow === "") ? segmentPaceHigh : hmsToSeconds(paceLow);
         segmentPaceRange = {high: segmentPaceHigh, low: segmentPaceLow}
-        newSegment = getDistance(segmentPaceRange, segmentDuration);
+        newSegment = getDistance(segmentPaceRange, segmentDuration, repeat);
         break;
       case null:
         throw new Error(`This state should be unreachable: ${conversionKind} `);
@@ -271,6 +294,7 @@ function Convertor(props: {
           pattern={distanceInputPattern}
           tooltipContent="Distance in kilometers, e.g. 4 or 1.2"
         />
+        <RepetitionCounter repeat={repeat} setRepeat={setRepeat} />
         <div className="flex items-center justify-between">
           <BackButton setStep={props.setStep} />
           <SubmitButton />

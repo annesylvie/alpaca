@@ -12,17 +12,18 @@ export enum Dimension {
 }
 
 /// Functions to convert from basic numbers to a SegmentData
-export function getDistance(pace: Range, duration: number): SegmentData {
+export function getDistance(pace: Range, duration: number, repeat: number): SegmentData {
   const lowSpeed = 1000 / pace.low;
   const highSpeed = 1000 / pace.high;
   return {
     distance: {high: highSpeed * duration, low: lowSpeed * duration},
     duration: {high: duration, low: duration},
     speed: {high: highSpeed, low: lowSpeed},
+    repeat: repeat
   };
 }
 
-export function getDuration(pace: Range, distanceInKm: number): SegmentData {
+export function getDuration(pace: Range, distanceInKm: number, repeat: number): SegmentData {
   const lowSpeed = 1000 / pace.low;
   const highSpeed = 1000 / pace.high;
   const distance = distanceInKm * 1000;
@@ -33,18 +34,19 @@ export function getDuration(pace: Range, distanceInKm: number): SegmentData {
       high: distance / lowSpeed, low: distance / highSpeed
     },
     speed: {high: highSpeed, low: lowSpeed},
+    repeat: repeat
   };
 }
 
 export function getPace(
-  distanceInKm: number,
-  duration: number
+  distanceInKm: number, duration: number, repeat: number
 ): SegmentData {
   const distance = distanceInKm * 1000;
   return {
     distance: {high: distance, low: distance},
     duration: {high: duration, low: duration},
     speed: {high: distance / duration, low: distance / duration},
+    repeat: repeat,
   };
 }
 
@@ -52,10 +54,10 @@ export function sumSegments(segments: Array<SegmentData>): SegmentData {
   let totalDuration = {high: 0, low: 0};
   let totalDistance = {high: 0, low: 0};
   segments.forEach((segment) => {
-    totalDuration.high += segment.duration.high;
-    totalDuration.low += segment.duration.low;
-    totalDistance.high += segment.distance.high;
-    totalDistance.low += segment.distance.low;
+    totalDuration.high += segment.repeat * segment.duration.high;
+    totalDuration.low += segment.repeat * segment.duration.low;
+    totalDistance.high += segment.repeat * segment.distance.high;
+    totalDistance.low += segment.repeat * segment.distance.low;
   });
   return {
     duration: totalDuration,
@@ -64,6 +66,7 @@ export function sumSegments(segments: Array<SegmentData>): SegmentData {
       high: totalDistance.high / totalDuration.low,
       low: totalDistance.low / totalDuration.high
     },
+    repeat: 1
   };
 }
 
