@@ -49,8 +49,8 @@ function isSet(value: string | null): boolean {
 
 
 function PaceDropdown(props: {
-  setPaceHigh: Dispatch<SetStateAction<string | null>>,
-  setPaceLow: Dispatch<SetStateAction<string | null>>,
+  setPaceHigh: Dispatch<SetStateAction<string>>,
+  setPaceLow: Dispatch<SetStateAction<string>>,
   setIsDropdownActive: Dispatch<SetStateAction<boolean>>
   setInputPaceAsRange: Dispatch<SetStateAction<boolean>>
   disabled: boolean,
@@ -58,14 +58,14 @@ function PaceDropdown(props: {
   const rawPaces = Cookies.get("customPaces");
   const savedPaces = rawPaces === undefined ? [] : JSON.parse(rawPaces);
   const [selectedPace, setSelectedPace] = useState<
-    {name: string, paceHigh: string | null, paceLow: string | null}
+    {name: string, paceHigh: string, paceLow: string}
   >({
-    paceHigh: null, paceLow: null, name: "Custom Paces"
+    paceHigh: "", paceLow: "", name: "Custom Paces"
   });
 
-  const handleChange = (value: {paceHigh: string | null, paceLow: string | null, name: string}) => {
+  const handleChange = (value: {paceHigh: string, paceLow: string, name: string}) => {
     setSelectedPace(value);
-    if (value.paceHigh !== null) {
+    if (value.paceHigh !== null && value.paceHigh.length > 0) {
       props.setPaceHigh(value.paceHigh);
       props.setPaceLow(value.paceLow);
       props.setIsDropdownActive(true);
@@ -123,10 +123,10 @@ function PaceDropdown(props: {
 
 
 function PaceInput(props: {
-  paceHigh: string | null,
-  setPaceHigh: Dispatch<SetStateAction<string | null>>,
-  paceLow: string | null,
-  setPaceLow: Dispatch<SetStateAction<string | null>>,
+  paceHigh: string,
+  setPaceHigh: Dispatch<SetStateAction<string>>,
+  paceLow: string,
+  setPaceLow: Dispatch<SetStateAction<string>>,
   disabled: boolean,
 }) {
   const [isDropdownActive, setIsDropdownActive] = useState(false);
@@ -183,12 +183,12 @@ function Convertor(props: {
   setSegments: Dispatch<SetStateAction<Array<SegmentData>>>;
   setStep: Dispatch<SetStateAction<number>>;
 }) {
-  const [paceHigh, setPaceHigh] = useState<string | null>(null);
-  const [paceLow, setPaceLow] = useState<string | null>(null);
+  const [paceHigh, setPaceHigh] = useState<string>('');
+  const [paceLow, setPaceLow] = useState<string>('');
   const [disablePace, setDisablePace] = useState(false);
-  const [duration, setDuration] = useState<string | null>(null);
+  const [duration, setDuration] = useState<string>('');
   const [disableDuration, setDisableDuration] = useState(false);
-  const [distance, setDistance] = useState<string | null>(null);
+  const [distance, setDistance] = useState<string>('');
   const [disableDistance, setDisableDistance] = useState(false);
   const [conversionKind, setConversionKind] = useState<ConversionKind | null>(null);
   const [repeat, setRepeat] = useState<number>(1);
@@ -277,6 +277,7 @@ function Convertor(props: {
           disabled={disablePace}
         />
         <InputLine
+          value={duration}
           inputTitle="Duration"
           inputName="duration"
           setValue={setDuration}
@@ -286,6 +287,7 @@ function Convertor(props: {
           tooltipContent={paceTooltipText}
         />
         <InputLine
+          value={distance}
           inputTitle="Distance"
           inputName="distance"
           setValue={setDistance}

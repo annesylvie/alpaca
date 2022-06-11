@@ -10,11 +10,11 @@ export let distanceInputPattern = "\\d+.?\\d*";
 
 
 export function InputLine(props: {
-  value?: string;
+  value: string;
   inputTitle: string;
   inputName: string;
   placeholder: string;
-  setValue: Dispatch<SetStateAction<string | null>>,
+  setValue: Dispatch<SetStateAction<string>>,
   disabled: boolean
   pattern: string;
   tooltipContent: string | null;
@@ -89,10 +89,10 @@ export function AverageRangeSwitch(props: {
 
 
 export function InputPace(props: {
-  paceHigh: string | null;
-  setPaceHigh: Dispatch<SetStateAction<string | null>>,
-  paceLow: string | null;
-  setPaceLow: Dispatch<SetStateAction<string | null>>,
+  paceHigh: string;
+  setPaceHigh: Dispatch<SetStateAction<string>>,
+  paceLow: string;
+  setPaceLow: Dispatch<SetStateAction<string>>,
   inputPaceAsRange: boolean,
   setInputPaceAsRange: Dispatch<SetStateAction<boolean>>,
   disabled: boolean
@@ -104,7 +104,7 @@ export function InputPace(props: {
       disabled={props.disabled}
     />
     <InputLine
-      value={props.paceHigh === null ? undefined : props.paceHigh}
+      value={props.paceHigh}
       setValue={props.setPaceHigh}
       inputTitle={props.inputPaceAsRange ? "Pace Range: From - To" : "Average Pace"}
       inputName="pace"
@@ -116,7 +116,7 @@ export function InputPace(props: {
     {
       props.inputPaceAsRange ?
         <InputLine
-          value={props.paceLow === null ? undefined : props.paceLow}
+          value={props.paceLow}
           setValue={props.setPaceLow}
           inputTitle="Pace"
           inputName="pace"
