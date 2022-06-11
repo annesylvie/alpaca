@@ -82,10 +82,9 @@ export function CustomPacesForm(
     existingPaceNames: Set<string>
   }
 ) {
-  //const {onChange, onSubmit, customPace} = useForm(addCustomPaceCallback);
-  const [paceName, setPaceName] = useState<string | null>(null);
-  const [paceValueHigh, setPaceValueHigh] = useState<string | null>(null);
-  const [paceValueLow, setPaceValueLow] = useState<string | null>(null);
+  const [paceName, setPaceName] = useState<string>("");
+  const [paceValueHigh, setPaceValueHigh] = useState<string>("");
+  const [paceValueLow, setPaceValueLow] = useState<string>("");
   const [inputPaceAsRange, setInputPaceAsRange] = useState(false);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -94,7 +93,7 @@ export function CustomPacesForm(
   };
 
   async function addCustomPaceCallback() {
-    if (paceName === null || paceName.length === 0 || paceValueHigh === null || paceValueHigh.length === 0) {
+    if (paceName.length === 0 || paceValueHigh.length === 0) {
       alert("The name or value of the custom pace should not be empty")
     }
     const newPace = {name: paceName!, paceHigh: paceValueHigh!, paceLow: paceValueLow === null || paceValueLow === "" ? paceValueHigh : paceValueLow} as SerializedPaceData;
@@ -116,7 +115,7 @@ export function CustomPacesForm(
     <div>
       <form onSubmit={onSubmit}>
         <InputLine
-          value={paceName === null ? undefined : paceName}
+          value={paceName}
           inputTitle="Name"
           inputName="name"
           setValue={setPaceName}
