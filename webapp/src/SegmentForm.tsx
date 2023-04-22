@@ -5,14 +5,14 @@ import React, {
   Fragment,
   SetStateAction,
 } from "react";
-import {Transition, Listbox} from '@headlessui/react'
-import {SelectorIcon} from '@heroicons/react/solid'
+import { Transition, Listbox } from '@headlessui/react'
+import { ChevronUpDownIcon } from '@heroicons/react/24/solid'
 import Cookies from 'js-cookie'
-import {getPace, getDistance, getDuration, hmsToSeconds} from "./Utils/Conversion";
-import {SegmentData} from "./Utils/Interfaces";
-import {paceTooltipText} from "./Utils/Tooltip";
-import {InputLine, InputPace, timeInputPattern, distanceInputPattern} from "./FormEntry";
-import {IncrementButton, SubmitButton, BackButton, AddNewButton, ClearAllButton} from "./Utils/Button";
+import { getPace, getDistance, getDuration, hmsToSeconds } from "./Utils/Conversion";
+import { SegmentData } from "./Utils/Interfaces";
+import { paceTooltipText } from "./Utils/Tooltip";
+import { InputLine, InputPace, timeInputPattern, distanceInputPattern } from "./FormEntry";
+import { IncrementButton, SubmitButton, BackButton, AddNewButton, ClearAllButton } from "./Utils/Button";
 
 enum ConversionKind {
   ToPace,
@@ -24,7 +24,7 @@ interface SegmentFormProps {
   setSegments: Dispatch<SetStateAction<Array<SegmentData>>>;
 }
 
-export const SegmentForm: React.FC<SegmentFormProps> = ({setSegments}: SegmentFormProps) => {
+export const SegmentForm: React.FC<SegmentFormProps> = ({ setSegments }: SegmentFormProps) => {
   const [step, setStep] = useState(0);
   return (
     <div>
@@ -58,12 +58,12 @@ function PaceDropdown(props: {
   const rawPaces = Cookies.get("customPaces");
   const savedPaces = rawPaces === undefined ? [] : JSON.parse(rawPaces);
   const [selectedPace, setSelectedPace] = useState<
-    {name: string, paceHigh: string | null, paceLow: string | null}
+    { name: string, paceHigh: string | null, paceLow: string | null }
   >({
     paceHigh: null, paceLow: null, name: "Custom Paces"
   });
 
-  const handleChange = (value: {paceHigh: string | null, paceLow: string | null, name: string}) => {
+  const handleChange = (value: { paceHigh: string | null, paceLow: string | null, name: string }) => {
     setSelectedPace(value);
     if (value.paceHigh !== null) {
       props.setPaceHigh(value.paceHigh);
@@ -80,7 +80,7 @@ function PaceDropdown(props: {
             <Listbox.Button className="relative w-full py-2 pl-3 pr-10 text-left bg-blue-600 rounded-lg shadow-md cursor-default focus:outline-none focus-visible:ring-2 focus-visible:ring-opacity-75 focus-visible:ring-white focus-visible:ring-offset-orange-300 focus-visible:ring-offset-2 focus-visible:border-indigo-500 sm:text-sm">
               <span className="block truncate">{selectedPace.name}</span>
               <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                <SelectorIcon
+                <ChevronUpDownIcon
                   className="w-5 h-5 text-cream"
                   aria-hidden="true"
                 />
@@ -93,17 +93,17 @@ function PaceDropdown(props: {
               leaveTo="opacity-0"
             >
               <Listbox.Options className="absolute w-full py-1 mt-1 overflow-auto text-base bg-blue-600 rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                {savedPaces.map((pace: {name: string, pace: number}, paceIndex: number) => (
+                {savedPaces.map((pace: { name: string, pace: number }, paceIndex: number) => (
                   <Listbox.Option
                     key={paceIndex}
-                    className={({active}) =>
+                    className={({ active }) =>
                       `cursor-default select-none relative py-2 px-4 ${active ? 'bg-blue-500' : ''
                       }`
                     }
                     value={pace}
                     disabled={props.disabled}
                   >
-                    {({selected}) => (
+                    {({ selected }) => (
                       <span
                         className={`block truncate ${selected ? 'font-medium' : 'font-normal'
                           }`}
@@ -246,14 +246,14 @@ function Convertor(props: {
         segmentDistance = distance === null ? 0 : parseFloat(distance);
         segmentPaceHigh = paceHigh === null ? 0 : hmsToSeconds(paceHigh);
         segmentPaceLow = (paceLow === null || paceLow === "") ? segmentPaceHigh : hmsToSeconds(paceLow);
-        segmentPaceRange = {high: segmentPaceHigh, low: segmentPaceLow}
+        segmentPaceRange = { high: segmentPaceHigh, low: segmentPaceLow }
         newSegment = getDuration(segmentPaceRange, segmentDistance, repeat);
         break;
       case ConversionKind.ToDistance:
         segmentDuration = duration === null ? 0 : hmsToSeconds(duration);
         segmentPaceHigh = paceHigh === null ? 0 : hmsToSeconds(paceHigh);
         segmentPaceLow = (paceLow === null || paceLow === "") ? segmentPaceHigh : hmsToSeconds(paceLow);
-        segmentPaceRange = {high: segmentPaceHigh, low: segmentPaceLow}
+        segmentPaceRange = { high: segmentPaceHigh, low: segmentPaceLow }
         newSegment = getDistance(segmentPaceRange, segmentDuration, repeat);
         break;
       case null:

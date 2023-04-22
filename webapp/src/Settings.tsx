@@ -1,13 +1,13 @@
-import {TrashIcon} from '@heroicons/react/solid'
+import { TrashIcon } from '@heroicons/react/24/solid'
 import React, {
   useState,
   Dispatch,
   SetStateAction,
 } from "react";
-import {InputLine, InputPace} from "./FormEntry";
-import {SubmitButton} from "./Utils/Button";
-import {SectionHeading} from "./Utils/SectionHeading";
-import {useAndUpdateCookie} from "./Utils/Cookie";
+import { InputLine, InputPace } from "./FormEntry";
+import { SubmitButton } from "./Utils/Button";
+import { SectionHeading } from "./Utils/SectionHeading";
+import { useAndUpdateCookie } from "./Utils/Cookie";
 
 
 export function Settings() {
@@ -56,7 +56,7 @@ function CustomPaceBox(
 }
 
 export function CustomPaces() {
-  const [paces, setPaces] = useAndUpdateCookie<SerializedPaceData>({cookieKey: "customPaces"});
+  const [paces, setPaces] = useAndUpdateCookie<SerializedPaceData>({ cookieKey: "customPaces" });
   const existingPaceNames = new Set(paces.map((pace) => pace.name));
 
   return (
@@ -97,7 +97,7 @@ export function CustomPacesForm(
     if (paceName === null || paceName.length === 0 || paceValueHigh === null || paceValueHigh.length === 0) {
       alert("The name or value of the custom pace should not be empty")
     }
-    const newPace = {name: paceName!, paceHigh: paceValueHigh!, paceLow: paceValueLow === null || paceValueLow === "" ? paceValueHigh : paceValueLow} as SerializedPaceData;
+    const newPace = { name: paceName!, paceHigh: paceValueHigh!, paceLow: paceValueLow === null || paceValueLow === "" ? paceValueHigh : paceValueLow } as SerializedPaceData;
     if (newPace.name.length > 32) {
       alert("Maximum 32 characters. Please choose a shorter name.")
     }

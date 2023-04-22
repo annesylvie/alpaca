@@ -1,6 +1,6 @@
-import {QuestionMarkCircleIcon, CogIcon} from '@heroicons/react/solid'
-import {ReactComponent as Logo} from './Assets/logo.svg';
-import {Link} from "react-router-dom";
+import { QuestionMarkCircleIcon, Cog8ToothIcon } from '@heroicons/react/24/solid'
+import { ReactComponent as Logo } from './Assets/logo.svg';
+import { Link } from "react-router-dom";
 
 export function TopBanner() {
   return (
@@ -33,7 +33,7 @@ export function TopBanner() {
                 type="button"
                 className="-mr-1 flex p-2"
               >
-                <CogIcon className="h-6 w-6 text-cream" aria-hidden="true" />
+                <Cog8ToothIcon className="h-6 w-6 text-cream" aria-hidden="true" />
               </button>
             </Link>
           </div>
