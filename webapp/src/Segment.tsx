@@ -3,9 +3,9 @@ import {displayDistance, displayDuration, displayPace} from "./Utils/Display";
 import {Dimension} from "./Utils/Conversion";
 import {classNames} from "./Utils/Css";
 import {SegmentData, Range} from "./Utils/Interfaces";
-import {ReactComponent as StopwatchIcon} from './Assets/stopwatch.svg';
-import {ReactComponent as PathIcon} from './Assets/path-2.svg';
-import {ReactComponent as ShoeIcon} from './Assets/shoe.svg';
+import StopwatchIcon from './Assets/stopwatch.svg?react';
+import PathIcon from './Assets/path-2.svg?react';
+import ShoeIcon from './Assets/shoe.svg?react';
 
 
 export interface SegmentProps {
@@ -81,7 +81,7 @@ function rangeToString(range: Range, dimension: Dimension): string {
 }
 
 
-const iconMap: Record<Dimension, JSX.Element> = {
+const iconMap: Record<Dimension, React.JSX.Element> = {
   [Dimension.Distance]: <PathIcon />,
   [Dimension.Duration]: <StopwatchIcon />,
   [Dimension.Pace]: <ShoeIcon />,

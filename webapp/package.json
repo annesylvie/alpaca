@@ -3,43 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@headlessui/react": "^1.7.14",
+    "@headlessui/react": "^2.2.10",
     "@heroicons/react": "^2.0.17",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^14.0.0",
-    "@testing-library/user-event": "^14.4.3",
-    "@types/jest": "^29.5.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/js-cookie": "^3.0.3",
-    "@types/node": "^18.15.13",
-    "@types/react": "^18.0.38",
-    "@types/react-dom": "^18.0.11",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.48.0",
-    "jest-cli": "^29.5.0",
-    "js-cookie": "^3.0.4",
-    "postcss": "^8.4.23",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-query": "^3.39.3",
-    "react-router-dom": "^6.10.0",
-    "react-scripts": "^5.0.1",
-    "typescript": "^5.0.1",
-    "web-vitals": "^3.3.1"
+    "@types/node": "^22.20.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "js-cookie": "^3.0.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "react-router-dom": "^7.18.3",
+    "typescript": "^7.0.2",
+    "web-vitals": "^6.2.1"
   },
   "scripts": {
-    "build:tailwind": "tailwindcss build -i src/tailwind.css -o src/tailwind.output.css",
-    "prestart": "npm run build:tailwind",
-    "prebuild": "npm run build:tailwind",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "browserslist": {
     "production": [
@@ -54,13 +38,13 @@
     ]
   },
   "devDependencies": {
-    "jest": "^29.5.0",
-    "prettier": "3.0.3",
-    "tailwindcss": "^3.3.3"
-  },
-  "overrides": {
-    "react-scripts": {
-      "typescript": "^5"
-    }
+    "@tailwindcss/vite": "^4.3.3",
+    "@vitejs/plugin-react": "^4.5.2",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.9.6",
+    "tailwindcss": "^4.3.3",
+    "vite": "^6.3.5",
+    "vite-plugin-svgr": "^4.3.0",
+    "vitest": "^3.2.4"
   }
 }

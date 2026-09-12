@@ -1,3 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@source not "../public/**";
+
+@theme {
+  --color-blue-500: #2F549D;
+  --color-blue-600: #2a4b8d;
+  --color-blue-700: #26437e;
+  --color-blue-800: #1d3461;
+  --color-blueGray-600: #475E8C;
+  --color-gold: #ffa630;
+  --color-orange: #F79256;
+  --color-cream: #f0f7ee;
+}

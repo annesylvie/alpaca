@@ -2,10 +2,9 @@ import React, {
   useState,
   Dispatch,
   useEffect,
-  Fragment,
   SetStateAction,
 } from "react";
-import { Transition, Listbox } from "@headlessui/react";
+import { Listbox } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/solid";
 import Cookies from "js-cookie";
 import {
@@ -140,25 +139,22 @@ function PaceDropdown(props: {
       <Listbox value={selectedPace} onChange={handleChange}>
         <div className="relative mt-1">
           <SelectedDropdownEntry name={selectedPace.name} />
-          <Transition
-            as={Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+          <Listbox.Options
+            transition
+            className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-blue-600 rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm transition ease-in duration-100 data-[closed]:opacity-0"
           >
-            <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-blue-600 rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {savedPaces.map(
-                (pace: { name: string; pace: number }, paceIndex: number) => (
-                  <DropdownChoice
-                    name={pace.name}
-                    value={pace}
-                    index={paceIndex}
-                    disabled={props.disabled}
-                  />
-                ),
-              )}
-            </Listbox.Options>
-          </Transition>
+            {savedPaces.map(
+              (pace: { name: string; pace: number }, paceIndex: number) => (
+                <DropdownChoice
+                  key={paceIndex}
+                  name={pace.name}
+                  value={pace}
+                  index={paceIndex}
+                  disabled={props.disabled}
+                />
+              ),
+            )}
+          </Listbox.Options>
         </div>
       </Listbox>
     </div>
@@ -228,28 +224,25 @@ function Dropdown(props: {
       <Listbox value={selectedValue} onChange={handleChange}>
         <div className="relative mt-1">
           <SelectedDropdownEntry name={selectedValue.name} />
-          <Transition
-            as={Fragment}
-            leave="transition ease-in duration-100"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
+          <Listbox.Options
+            transition
+            className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-blue-600 rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm transition ease-in duration-100 data-[closed]:opacity-0"
           >
-            <Listbox.Options className="absolute z-50 w-full py-1 mt-1 overflow-auto text-base bg-blue-600 rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {props.dropdownValues.map(
-                (
-                  dropdownValue: { name: string; value: string },
-                  dropdownValueIndex: number,
-                ) => (
-                  <DropdownChoice
-                    name={dropdownValue.name}
-                    value={dropdownValue}
-                    index={dropdownValueIndex}
-                    disabled={props.disabled}
-                  />
-                ),
-              )}
-            </Listbox.Options>
-          </Transition>
+            {props.dropdownValues.map(
+              (
+                dropdownValue: { name: string; value: string },
+                dropdownValueIndex: number,
+              ) => (
+                <DropdownChoice
+                  key={dropdownValueIndex}
+                  name={dropdownValue.name}
+                  value={dropdownValue}
+                  index={dropdownValueIndex}
+                  disabled={props.disabled}
+                />
+              ),
+            )}
+          </Listbox.Options>
         </div>
       </Listbox>
     </div>
