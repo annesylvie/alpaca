@@ -4,6 +4,9 @@ import tailwindcss from '@tailwindcss/vite'
 import svgr from 'vite-plugin-svgr'
 
 export default defineConfig({
+  build: {
+    outDir: 'build',
+  },
   plugins: [
     react(),
     tailwindcss(),
