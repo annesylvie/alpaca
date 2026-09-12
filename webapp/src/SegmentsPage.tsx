@@ -14,8 +14,8 @@ export function SegmentsPage() {
   return (
     <div className="flex justify-center">
       <div className="m-4 p-4 w-full max-w-lg">
-        {segments.map((segment) => (
-          <Segment data={segment} isTally={false} />
+        {segments.map((segment, index) => (
+          <Segment key={index} data={segment} isTally={false} />
         ))}
         <Segment data={tally} isTally={true} />
         <SegmentForm setSegments={setSegments} />

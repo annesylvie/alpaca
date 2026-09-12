@@ -1,5 +1,5 @@
 import { QuestionMarkCircleIcon, Cog8ToothIcon } from '@heroicons/react/24/solid'
-import { ReactComponent as Logo } from './Assets/logo.svg';
+import Logo from './Assets/logo.svg?react';
 import { Link } from "react-router-dom";
 
 export function TopBanner() {
