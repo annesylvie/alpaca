@@ -13,7 +13,7 @@ export function SegmentsPage() {
 
   return (
     <div className="flex justify-center">
-      <div className="m-4 p-4 w-full max-w-lg">
+      <div className="m-4 p-4 pb-72 w-full max-w-lg">
         {segments.map((segment, index) => (
           <Segment key={index} data={segment} isTally={false} />
         ))}
